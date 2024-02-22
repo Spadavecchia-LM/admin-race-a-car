@@ -141,7 +141,7 @@ const AutosTable = () => {
               </Button>
             </DropdownTrigger>
             <DropdownMenu aria-label="Static Actions">
-              <DropdownItem key="editar">editar</DropdownItem>
+              <DropdownItem key="editar" isDisabled >editar</DropdownItem>
               <DropdownItem key="cambiar estado" onClick={() => dispatch({ type: "TOGGLE_ESTADO", payload: item.id }) }>cambiar estado</DropdownItem>
               <DropdownItem key="borrar" onClick={() => handleDelete(item.id)} className="text-danger" color="danger">
                 borrar
