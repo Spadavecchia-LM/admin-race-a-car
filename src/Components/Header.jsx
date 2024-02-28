@@ -64,7 +64,7 @@ const Header = () => {
                 radius="sm"
                 variant="light"
               >
-                Publicaciones
+                Categorias
               </Button>
             </DropdownTrigger>
           </NavbarItem>
@@ -79,13 +79,109 @@ const Header = () => {
               key="autoscaling"
               onClick={()=> navigate("/dashboard/agregar/publicacion")}
             >
-              Agregar nueva publicación
+              Agregar nueva categoria
             </DropdownItem>
             <DropdownItem
               key="autoscaling"
               onClick={() => navigate("/dashboard/publicaciones")}
             >
-              Listado de publicaciones
+              Tabla de categorias
+            </DropdownItem>
+        
+          </DropdownMenu>
+        </Dropdown>
+
+        <Dropdown>
+          <NavbarItem>
+            <DropdownTrigger>
+              <Button
+                isDisabled
+                disableRipple
+                className="p-0 bg-transparent data-[hover=true]:bg-transparent text-primaryWhite"
+                endContent={<IoMdArrowDropdown />}
+                radius="sm"
+                variant="light"
+              >
+                Usuarios
+              </Button>
+            </DropdownTrigger>
+          </NavbarItem>
+          <DropdownMenu
+            aria-label="ACME features"
+            className="w-[340px]"
+            itemClasses={{
+              base: "gap-4",
+            }}
+          >
+            <DropdownItem
+              key="autoscaling"
+              onClick={() => navigate("/dashboard/publicaciones")}
+            >
+              Tabla de Usuarios
+            </DropdownItem>
+        
+          </DropdownMenu>
+        </Dropdown>
+
+        <Dropdown>
+          <NavbarItem>
+            <DropdownTrigger>
+              <Button
+                isDisabled
+                disableRipple
+                className="p-0 bg-transparent data-[hover=true]:bg-transparent text-primaryWhite"
+                endContent={<IoMdArrowDropdown />}
+                radius="sm"
+                variant="light"
+              >
+                Items
+              </Button>
+            </DropdownTrigger>
+          </NavbarItem>
+          <DropdownMenu
+            aria-label="ACME features"
+            className="w-[340px]"
+            itemClasses={{
+              base: "gap-4",
+            }}
+          >
+            <DropdownItem
+              key="autoscaling"
+              onClick={() => navigate("/dashboard/publicaciones")}
+            >
+              tabla de Items incluidos
+            </DropdownItem>
+        
+          </DropdownMenu>
+        </Dropdown>
+  
+        <Dropdown>
+          <NavbarItem>
+            <DropdownTrigger>
+              <Button
+                isDisabled
+                disableRipple
+                className="p-0 bg-transparent data-[hover=true]:bg-transparent text-primaryWhite"
+                endContent={<IoMdArrowDropdown />}
+                radius="sm"
+                variant="light"
+              >
+                Reservas
+              </Button>
+            </DropdownTrigger>
+          </NavbarItem>
+          <DropdownMenu
+            aria-label="ACME features"
+            className="w-[340px]"
+            itemClasses={{
+              base: "gap-4",
+            }}
+          >
+            <DropdownItem
+              key="autoscaling"
+              onClick={() => navigate("/dashboard/publicaciones")}
+            >
+              Tabla de reservas
             </DropdownItem>
         
           </DropdownMenu>
