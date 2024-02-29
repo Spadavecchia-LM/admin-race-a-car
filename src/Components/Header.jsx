@@ -1,12 +1,20 @@
-import React, { useEffect } from "react";
+import React, { useContext, useEffect } from "react";
 import {Navbar, NavbarBrand, NavbarContent, NavbarItem, Link, Button, DropdownItem, DropdownTrigger, Dropdown, DropdownMenu} from "@nextui-org/react";
 import { IoMdArrowDropdown } from "react-icons/io";
 import { useNavigate } from "react-router-dom";
+import { GlobalContext } from "../Context/AppContext";
 
 
 const Header = () => {
 
   const navigate = useNavigate()
+  const {state, dispatch} = useContext(GlobalContext)
+
+  const logout = () => {
+    localStorage.removeItem("Authorization")
+    dispatch({type:"LOGOUT"})
+    navigate("/")
+  }
 
   return (
     <Navbar className="bg-primaryBlue text-primaryWhite">
@@ -57,7 +65,7 @@ const Header = () => {
           <NavbarItem>
             <DropdownTrigger>
               <Button
-                isDisabled
+                
                 disableRipple
                 className="p-0 bg-transparent data-[hover=true]:bg-transparent text-primaryWhite"
                 endContent={<IoMdArrowDropdown />}
@@ -76,13 +84,13 @@ const Header = () => {
             }}
           >
             <DropdownItem
-              key="autoscaling"
+              key="1"
               onClick={()=> navigate("/dashboard/agregar/publicacion")}
             >
               Agregar nueva categoria
             </DropdownItem>
             <DropdownItem
-              key="autoscaling"
+              key="2"
               onClick={() => navigate("/dashboard/publicaciones")}
             >
               Tabla de categorias
@@ -95,7 +103,7 @@ const Header = () => {
           <NavbarItem>
             <DropdownTrigger>
               <Button
-                isDisabled
+                
                 disableRipple
                 className="p-0 bg-transparent data-[hover=true]:bg-transparent text-primaryWhite"
                 endContent={<IoMdArrowDropdown />}
@@ -114,7 +122,7 @@ const Header = () => {
             }}
           >
             <DropdownItem
-              key="autoscaling"
+              key="3"
               onClick={() => navigate("/dashboard/publicaciones")}
             >
               Tabla de Usuarios
@@ -127,7 +135,7 @@ const Header = () => {
           <NavbarItem>
             <DropdownTrigger>
               <Button
-                isDisabled
+                
                 disableRipple
                 className="p-0 bg-transparent data-[hover=true]:bg-transparent text-primaryWhite"
                 endContent={<IoMdArrowDropdown />}
@@ -146,10 +154,10 @@ const Header = () => {
             }}
           >
             <DropdownItem
-              key="autoscaling"
+              key="4"
               onClick={() => navigate("/dashboard/publicaciones")}
             >
-              tabla de Items incluidos
+              tabla de Items
             </DropdownItem>
         
           </DropdownMenu>
@@ -159,7 +167,7 @@ const Header = () => {
           <NavbarItem>
             <DropdownTrigger>
               <Button
-                isDisabled
+                
                 disableRipple
                 className="p-0 bg-transparent data-[hover=true]:bg-transparent text-primaryWhite"
                 endContent={<IoMdArrowDropdown />}
@@ -178,7 +186,7 @@ const Header = () => {
             }}
           >
             <DropdownItem
-              key="autoscaling"
+              key="5"
               onClick={() => navigate("/dashboard/publicaciones")}
             >
               Tabla de reservas
@@ -190,7 +198,7 @@ const Header = () => {
       </NavbarContent>
       <NavbarContent justify="end">
         <NavbarItem>
-          <Button onClick={() => navigate("/")} color="danger" href="#" variant="solid">
+          <Button onClick={logout} color="danger" href="#" variant="solid">
             Cerrar sesión
           </Button>
         </NavbarItem>

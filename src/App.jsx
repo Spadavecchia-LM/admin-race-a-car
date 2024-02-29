@@ -21,26 +21,23 @@ function App() {
     }
 
     window.addEventListener("resize", handleResize)
-
-    console.log(screenHeight)
-    console.log(screenWidth)
-
-
   },)
 
   return (
     <>
 
-
-
+  {screenWidth < 1024 ? <Error/> :
+  <>
   <Routes>
   <Route path="/dashboard" element={<Home/>}/>
-  <Route path="/" element={screenWidth > 1024 ? <Login/> : <Error/>}/>
+  <Route path="/" element={ <Login/>}/>
   <Route path="/dashboard/autos" element={<AutosTable/>}/>
   <Route path="/dashboard/agregar/auto" element={<AgregarAuto/>}/>
-
   </Routes>
   <Footer/>
+  </>
+  }
+
     </>
   )
 }
