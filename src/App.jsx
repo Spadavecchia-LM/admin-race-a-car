@@ -6,13 +6,16 @@ import AutosTable from "./Components/pages/AutosTable"
 
 import AgregarAuto from "./Components/pages/AgregarAuto"
 
-import { useEffect, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import Error from "./Components/pages/Error"
+import { GlobalContext } from "./Context/AppContext"
 
 function App() {
 
   const [screenWidth, setScreenWidth] = useState(window.innerWidth)
   const [screenHeight, setScreenHeight] = useState(window.innerHeight)
+  const {state} = useContext(GlobalContext)
+  const {isLogged} = state
 
   useEffect(() => {
     const handleResize = () => {
@@ -28,6 +31,7 @@ function App() {
 
   {screenWidth < 1024 ? <Error/> :
   <>
+  
   <Routes>
   <Route path="/dashboard" element={<Home/>}/>
   <Route path="/" element={ <Login/>}/>

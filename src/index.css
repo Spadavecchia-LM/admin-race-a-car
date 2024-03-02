@@ -5,3 +5,11 @@
 .max-w-\[1024px\]{
     max-width:100% !important;
 }
+
+input{
+    border-style:none;
+}
+input:focus{
+    box-shadow:none !important;
+}
+

@@ -1,39 +1,121 @@
-import React, { useContext } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import Header from "../Header"
-import {Button, Input} from "@nextui-org/react";
+import {Button, Input, Select, SelectItem, Spinner} from "@nextui-org/react";
 import { autos } from '../utils/data';
 import { GlobalContext } from '../../Context/AppContext';
+import { uploadFiles } from '../../firebase/config';
 
 const AgregarAuto = () => {
 
+    const [isLoading, setIsLoading] = useState(false)
+
+    useEffect(() => {
+        const getCategorias = async () => {
+            const response = await fetch("http://localhost:8085/categoria/all")
+
+            if(response.ok){
+                const data = await response.json()
+                setCategorias([...data])
+            }
+        }
+        getCategorias()
+
+    },[])
 
     const {state,dispatch} = useContext(GlobalContext)
 
+    const [categorias, setCategorias] = useState([])
+
+
     const [nuevoAuto, setNuevoAuto] = React.useState(
         {
-            id: autos.length + 1,
-            Capacidad: null,
-            Categoria: "",
-            Marca:"",
-            Modelo:"",
-            Estado: true,
-            LinkFoto: ""
+            marca:"",
+            modelo:"",
+            color:"",
+            idCategoria:null,
+            anio: null,
+            capacidad: null,
+            tipoDeCaja: "",
+            caballosDeFuerza:null,
+            traccion:"",
+            combustion:"",
+            valor:null,
+            disponible:true,
+            images: []
         }
     )
+    const [imagenes, setImagenes] = useState([])
 
     const handleInputChange = (e) => {
-        const {name, value} =  e.target
+    
+        const {name, value} = e.target
 
-        setNuevoAuto({...nuevoAuto, [name]:value})
+        setNuevoAuto({...nuevoAuto, [name]: value})
     }
 
 
+    const handleFilesOnChange = (e) => {
+        setImagenes([...imagenes, ...e.target.files])
+    }
+ 
+
+
+
+
+
     //sin validaciones
-    const handleSubmit  = (e) => {
+    const handleSubmit  = async (e) => {
         e.preventDefault()
-        dispatch({type:"ADD_AUTO", payload: nuevoAuto})
-        alert("se agrego correctamente el auto")
-        document.getElementById("form").reset()
+        setIsLoading(true)
+            const urls = await Promise.all(imagenes.map((image => uploadFiles(image))))
+
+
+            setNuevoAuto({...nuevoAuto, images:urls})
+          
+                setTimeout(async () => {
+                    const response = await fetch("http://localhost:8085/autos", {
+                        method:"POST",
+                        headers:{
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify(nuevoAuto)
+                    })
+        
+                    if(response.ok){
+                        console.log(nuevoAuto)
+                        alert("el auto se agrego correctamente")
+                        setNuevoAuto({
+                            marca:"",
+                            modelo:"",
+                            color:"",
+                            idCategoria:null,
+                            anio: null,
+                            capacidad: null,
+                            tipoDeCaja: "",
+                            caballosDeFuerza:null,
+                            traccion:"",
+                            combustion:"",
+                            valor:null,
+                            disponible:true,
+                            images: []
+                        })
+                        setIsLoading(false)
+                   
+                }
+                },5000)
+    
+               
+
+     
+    
+
+             
+              
+              
+        
+                
+
+      
     }
  
 
@@ -46,37 +128,74 @@ const AgregarAuto = () => {
         <h1 className='text-center text-fsHero text-primaryBlue'>Agregar vehículo</h1>
 
         <div className='flex items-center justify-around gap-5 my-5'>
-            <span className='w-1/2 bg-primaryGold text-primaryWhite rounded-md text-center py-[14px]'>Marca</span>
-            <Input className='w-1/2' name='Marca'  variant='faded' size='md' onChange={handleInputChange}></Input>
+            <span className='w-1/2 bg-primaryGold text-primaryWhite rounded-md text-center py-[14px]'>marca</span>
+            <Input className='w-1/2' name='marca'  variant='faded' size='md' onChange={handleInputChange} ></Input>
         </div>
         <div className='flex items-center justify-around gap-5 mt-5'>
-            <span className='w-1/2 bg-primaryGold text-primaryWhite rounded-md text-center py-[14px]'>Modelo</span>
-            <Input className='w-1/2' name='Modelo'  variant='faded' size='md' onChange={handleInputChange} ></Input>
+            <span className='w-1/2 bg-primaryGold text-primaryWhite rounded-md text-center py-[14px]'>modelo</span>
+            <Input className='w-1/2' name='modelo'  variant='faded' size='md' onChange={handleInputChange}  ></Input>
         </div>
         <div className='flex items-center justify-around gap-5 mt-5'>
-            <span className='w-1/2 bg-primaryGold text-primaryWhite rounded-md text-center py-[14px]'>Año</span>
-            <Input className='w-1/2' name='Año' type='number' variant='faded' size='md' onChange={handleInputChange}></Input>
+            <span className='w-1/2 bg-primaryGold text-primaryWhite rounded-md text-center py-[14px]'>color</span>
+            <Input className='w-1/2' name='color'  variant='faded' size='md'  onChange={handleInputChange} ></Input>
         </div>
         <div className='flex items-center justify-around gap-5 mt-5'>
-            <span className='w-1/2 bg-primaryGold text-primaryWhite rounded-md text-center py-[14px]'>Capacidad</span>
-            <Input className='w-1/2' name='Capacidad' type='number'  variant='faded' size='md' onChange={handleInputChange}></Input>
+            <span className='w-1/2 bg-primaryGold text-primaryWhite rounded-md text-center py-[14px]'>año</span>
+            <Input className='w-1/2' name='anio' type='number' variant='faded' size='md' onChange={handleInputChange} ></Input>
         </div>
         <div className='flex items-center justify-around gap-5 mt-5'>
-            <span className='w-1/2 bg-primaryGold text-primaryWhite rounded-md text-center py-[14px]'>Categoria</span>
-            <Input className='w-1/2' name='Categoria'  variant='faded' size='md' onChange={handleInputChange}></Input>
+            <span className='w-1/2 bg-primaryGold text-primaryWhite rounded-md text-center py-[14px]'>capacidad</span>
+            <Input className='w-1/2' name='capacidad' type='number'  variant='faded' size='md' onChange={handleInputChange} ></Input>
         </div>
         <div className='flex items-center justify-around gap-5 mt-5'>
-            <span className='w-1/2 bg-primaryGold text-primaryWhite rounded-md text-center py-[14px]'>Precio</span>
-            <Input className='w-1/2' name='Precio' type='number' variant='faded' size='md' onChange={handleInputChange}></Input>
+            <span className='w-1/2 bg-primaryGold text-primaryWhite rounded-md text-center py-[14px]'>caballos de fuerza</span>
+            <Input className='w-1/2' name='caballosDeFuerza' type='number'  variant='faded' size='md' onChange={handleInputChange} ></Input>
         </div>
         <div className='flex items-center justify-around gap-5 mt-5'>
-            <span className='w-1/2 bg-primaryGold text-primaryWhite rounded-md text-center py-[14px]'>Imagen</span>
+            <span className='w-1/2 bg-primaryGold text-primaryWhite rounded-md text-center py-[14px]'>categoria</span>
+            <Select className='w-1/2' name='idCategoria' label="categoria"  variant='faded' size='md'  onChange={handleInputChange}>
+                {categorias?.map((categoria) => {
+                    return(
+                        <SelectItem key={categoria.id} value={categoria.id}>{categoria.categoria}</SelectItem>
+                    )
+                })}
+            </Select>
+        </div>
+        <div className='flex items-center justify-around gap-5 mt-5'>
+            <span className='w-1/2 bg-primaryGold text-primaryWhite rounded-md text-center py-[14px]'>tipo de caja</span>
+            <Select className='w-1/2' name='tipoDeCaja' label="caja"  variant='faded' size='md' onChange={handleInputChange} >
+                <SelectItem key={"Automática"} value={"Automática"} >Automatica</SelectItem>
+                <SelectItem key={"Manual"} value={"Manual"} >Manual</SelectItem>
+            </Select>
+        </div>
+        <div className='flex items-center justify-around gap-5 mt-5'>
+            <span className='w-1/2 bg-primaryGold text-primaryWhite rounded-md text-center py-[14px]'>combustion</span>
+            <Select className='w-1/2' name='combustion' label="combustion"  variant='faded' size='md' onChange={handleInputChange} >
+                <SelectItem key={"Naftero"} value={"Naftero"} >Naftero</SelectItem>
+                <SelectItem key={"Hibrido"} value={"Hibrido"} >Hibrido</SelectItem>
+                <SelectItem key={"Electrico"} value={"Electrico"}>Electrico</SelectItem>
+            </Select>
+        </div>
+        <div className='flex items-center justify-around gap-5 mt-5'>
+            <span className='w-1/2 bg-primaryGold text-primaryWhite rounded-md text-center py-[14px]'>traccion</span>
+            <Select className='w-1/2' name='traccion' label="traccion"  variant='faded' size='md' onChange={handleInputChange} >
+                <SelectItem key={"Delantera"} value={"Delantera"} >Delantera</SelectItem>
+                <SelectItem key={"Trasera"} value={"Trasera"} >Trasera</SelectItem>
+                <SelectItem key={"Integral"} value={"Integral"}>Integral</SelectItem>
+            </Select>
+        </div>
+        <div className='flex items-center justify-around gap-5 mt-5'>
+            <span className='w-1/2 bg-primaryGold text-primaryWhite rounded-md text-center py-[14px]'>valor</span>
+            <Input className='w-1/2' name='valor' type='number' variant='faded' size='md' onChange={handleInputChange} ></Input>
+        </div>
+        <div className='flex items-center justify-around gap-5 mt-5'>
+            <span className='w-1/2 bg-primaryGold text-primaryWhite rounded-md text-center py-[14px]'>imagenes</span>
             {/* mas adelante cambiar a tipo file */}
-            <Input className='w-1/2' name='LinkFoto' type='text' placeholder='Url de la foto' onChange={handleInputChange}    variant='flat' size='md'></Input>
+            <Input className='w-1/2' name='imagenes' type='file' multiple variant='flat' size='md' onChange={handleFilesOnChange} ></Input>
         </div>
 
         <div className='flex mt-10'>
-        <Button className='w-1/2 mx-auto bg-primaryBlue text-primaryWhite' type='submit'>Confirmar vehículo</Button>
+        <Button className='w-1/2 mx-auto bg-primaryBlue text-primaryWhite' type='submit'>{isLoading ? <Spinner/> : "confirmar vehiculo"}</Button>
         </div>
 
     </form>

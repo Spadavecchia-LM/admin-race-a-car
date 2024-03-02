@@ -1,4 +1,4 @@
-import { Accordion, AccordionItem, Button, Chip } from "@nextui-org/react";
+import { Accordion, AccordionItem, Button, Chip, Image } from "@nextui-org/react";
 import {
   Table,
   TableHeader,
@@ -27,10 +27,34 @@ import React, { useContext, useEffect, useState } from "react";
 import Header from "../Header";
 import { GlobalContext } from "../../Context/AppContext";
 import { useNavigate } from "react-router-dom";
+import { Carousel } from "flowbite-react";
 
 const AutosTable = () => {
   const navigate = useNavigate();
-  const { isOpen, onOpen, onOpenChange } = useDisclosure();
+
+  const {
+    isOpen: isItemsModalOpen,
+    onOpen: onItemsModalOpen,
+    onClose: onItemsModalClose,
+  } = useDisclosure();
+
+  const {
+    isOpen: isImagesModalOpen,
+    onOpen: onImagesModalOpen,
+    onClose: onImagesModalClose,
+  } = useDisclosure();
+
+  const refresh = async() => {
+    try{
+      const response = await fetch("http://localhost:8085/autos/all")
+      if(response.ok){
+        const data = await response.json()
+        dispatch({type:"GET_AUTOS",payload: data})
+      }
+    }catch(err){
+      console.log(err)
+    }
+  }
 
   const { state, dispatch } = useContext(GlobalContext);
 
@@ -53,18 +77,36 @@ const AutosTable = () => {
   }, [page, autos]);
 
 
-  const handleSelectedAuto = (id) => {
+  const handleSelectedAutoForItems = (id) => {
     const autoEncontrado = autos.find((auto) => auto.id == id);
     setSelectedAuto(autoEncontrado);
-    onOpen()
-
-   
+    onItemsModalOpen()
+  };
+  const handleSelectedAutoForImages = (id) => {
+    const autoEncontrado = autos.find((auto) => auto.id == id);
+    setSelectedAuto(autoEncontrado);
+    onImagesModalOpen()
   };
 
   const selectedAutoItems = selectedAuto != null && [...selectedAuto?.items]
-  useEffect(() => {
-    console.log(selectedAutoItems)
-  },[selectedAuto])
+
+  const handleDelete = async (id) => {
+    try{
+      if(confirm("seguro queres eliminar el auto? se perderan todos los datos")){
+        const response = await fetch("http://localhost:8085/autos/" + id, {method:"DELETE"})
+        if(response.ok){
+          alert("borrado con exito")
+          refresh()
+        }
+      }else{
+        return
+      }
+
+      
+    }catch(err){
+      console.log(err)
+    }
+  }
 
   return (
     <>
@@ -138,6 +180,7 @@ const AutosTable = () => {
             <TableColumn className="bg-primaryGold text-primaryWhite">
               items disponibles
             </TableColumn>
+            <TableColumn className="bg-primaryGold text-primaryWhite" >imagenes</TableColumn>
             <TableColumn className="bg-primaryGold text-primaryWhite">
               traccion
             </TableColumn>
@@ -166,9 +209,10 @@ const AutosTable = () => {
                 <TableCell>
                   <Button
                     className="bg-primaryGold text-primaryWhite"
-                    onPress={() => handleSelectedAuto(item.id)}
+                    onPress={() => handleSelectedAutoForItems(item.id)}
                   >ver items</Button>
                 </TableCell>
+                <TableCell><Button   onPress={() => handleSelectedAutoForImages(item.id)}>ver fotos</Button></TableCell>
                 <TableCell>{item.traccion}</TableCell>
                 <TableCell>
                   <Dropdown>
@@ -189,6 +233,7 @@ const AutosTable = () => {
                         cambiar estado
                       </DropdownItem>
                       <DropdownItem
+                        onClick={()=>handleDelete(item.id)}
                         key="borrar"
                         className="text-danger"
                         color="danger"
@@ -203,7 +248,7 @@ const AutosTable = () => {
           </TableBody>
         </Table>
 
-        <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
+        <Modal isOpen={isItemsModalOpen} onOpenChange={onItemsModalClose}>
           <ModalContent>
             {(onClose) => (
               <>
@@ -231,6 +276,31 @@ const AutosTable = () => {
                   })
                 }
 
+                </ModalBody>
+                <ModalFooter>
+                  <Button color="danger" variant="light" onPress={onClose}>
+                    Close
+                  </Button>
+                </ModalFooter>
+              </>
+            )}
+          </ModalContent>
+        </Modal>
+
+
+        <Modal size="full" className="bg-secondaryBlue" isOpen={isImagesModalOpen} onOpenChange={onImagesModalClose}>
+          <ModalContent>
+            {(onClose) => (
+              <>
+                <ModalBody>
+
+                 <Carousel>
+                  {selectedAuto.images.map(image => {
+                    return(
+                      <img src={image} key={image} alt="foto del auto" className="w-1/2"/>
+                    )
+                  })}
+                 </Carousel>
                 </ModalBody>
                 <ModalFooter>
                   <Button color="danger" variant="light" onPress={onClose}>

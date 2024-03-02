@@ -1,6 +1,7 @@
 
 import { initializeApp } from "firebase/app";
-import {getStorage} from "firebase/storage"
+import {getStorage, ref, uploadBytes ,getDownloadURL} from "firebase/storage"
+import { v4 } from "uuid";
 
 
 // Your web app's Firebase configuration
@@ -17,3 +18,13 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 
 export const storage = getStorage(app)
+
+export const uploadFiles =  async (files) => {
+  const storageRef = ref(storage, v4())
+
+   await uploadBytes(storageRef,files)
+
+   const url = await getDownloadURL(storageRef)
+  
+   return url
+}
