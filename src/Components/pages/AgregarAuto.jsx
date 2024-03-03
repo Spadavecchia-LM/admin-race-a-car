@@ -24,6 +24,18 @@ const AgregarAuto = () => {
 
     const {state,dispatch} = useContext(GlobalContext)
 
+    const refresh = async() => {
+        try{
+          const response = await fetch("http://localhost:8085/autos/all")
+          if(response.ok){
+            const data = await response.json()
+            dispatch({type:"GET_AUTOS",payload: data})
+          }
+        }catch(err){
+          console.log(err)
+        }
+      }
+
     const [categorias, setCategorias] = useState([])
 
 
@@ -64,58 +76,59 @@ const AgregarAuto = () => {
 
 
     //sin validaciones
-    const handleSubmit  = async (e) => {
-        e.preventDefault()
-        setIsLoading(true)
-            const urls = await Promise.all(imagenes.map((image => uploadFiles(image))))
+   
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setIsLoading(true);
+    
+        const uploadPromises = imagenes.map((image) => uploadFiles(image))
 
-
-            setNuevoAuto({...nuevoAuto, images:urls})
+       
+        try {
+            const urls = await Promise.all(uploadPromises)
           
-                setTimeout(async () => {
-                    const response = await fetch("http://localhost:8085/autos", {
-                        method:"POST",
-                        headers:{
-                            "Content-Type": "application/json"
-                        },
-                        body: JSON.stringify(nuevoAuto)
-                    })
-        
-                    if(response.ok){
-                        console.log(nuevoAuto)
-                        alert("el auto se agrego correctamente")
-                        setNuevoAuto({
-                            marca:"",
-                            modelo:"",
-                            color:"",
-                            idCategoria:null,
-                            anio: null,
-                            capacidad: null,
-                            tipoDeCaja: "",
-                            caballosDeFuerza:null,
-                            traccion:"",
-                            combustion:"",
-                            valor:null,
-                            disponible:true,
-                            images: []
-                        })
-                        setIsLoading(false)
-                   
-                }
-                },5000)
-    
-               
+       
+          
+              const postAutoPromise = fetch("http://localhost:8085/autos", {
+                method:"POST",
+                headers:{
+                  "Content-Type": "application/json"
+                },
+                body: JSON.stringify({...nuevoAuto, images: urls})
+              });
+          
+          
+            const postAutoResponse = await postAutoPromise;
+          
+            if(postAutoResponse.ok){
+              alert("el auto se agrego correctamente");
+              setNuevoAuto({
+                marca:"",
+                modelo:"",
+                color:"",
+                idCategoria:null,
+                anio: null,
+                capacidad: null,
+                tipoDeCaja: "",
+                caballosDeFuerza:null,
+                traccion:"",
+                combustion:"",
+                valor:null,
+                disponible:true,
+                images: []
+              });
+              setIsLoading(false);
+              document.querySelector("#form").reset();
+              refresh();
+            }
+          } catch (error) {
+            console.error('Error:', error);
+          }
+    }
 
-     
-    
-
-             
-              
-              
-        
-                
-
-      
+    const actualizarAuto = async (auto) => {
+        setNuevoAuto(auto)
+        console.log(auto)
     }
  
 
@@ -124,7 +137,7 @@ const AgregarAuto = () => {
   <Header/>
   <div className='h-full w-screen pt-5 pb-5 bg-secondaryBlue'>
 
-    <form className='w-1/2 mx-auto bg-[#d4d4d4] p-10' id='form' onSubmit={handleSubmit} >
+    <form className='w-1/2 mx-auto bg-[#d4d4d4] p-10' id='form' onSubmit={handleSubmit}>
         <h1 className='text-center text-fsHero text-primaryBlue'>Agregar vehículo</h1>
 
         <div className='flex items-center justify-around gap-5 my-5'>
@@ -191,7 +204,7 @@ const AgregarAuto = () => {
         <div className='flex items-center justify-around gap-5 mt-5'>
             <span className='w-1/2 bg-primaryGold text-primaryWhite rounded-md text-center py-[14px]'>imagenes</span>
             {/* mas adelante cambiar a tipo file */}
-            <Input className='w-1/2' name='imagenes' type='file' multiple variant='flat' size='md' onChange={handleFilesOnChange} ></Input>
+            <input className='w-1/2' name='imagenes' type='file' multiple variant='flat' size='md' onChange={handleFilesOnChange} ></input>
         </div>
 
         <div className='flex mt-10'>

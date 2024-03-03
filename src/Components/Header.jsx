@@ -84,14 +84,8 @@ const Header = () => {
             }}
           >
             <DropdownItem
-              key="1"
-              onClick={()=> navigate("/dashboard/agregar/publicacion")}
-            >
-              Agregar nueva categoria
-            </DropdownItem>
-            <DropdownItem
               key="2"
-              onClick={() => navigate("/dashboard/publicaciones")}
+              onClick={() => navigate("/dashboard/categorias")}
             >
               Tabla de categorias
             </DropdownItem>
@@ -123,7 +117,7 @@ const Header = () => {
           >
             <DropdownItem
               key="3"
-              onClick={() => navigate("/dashboard/publicaciones")}
+              onClick={() => navigate("/dashboard/usuarios")}
             >
               Tabla de Usuarios
             </DropdownItem>
@@ -155,7 +149,7 @@ const Header = () => {
           >
             <DropdownItem
               key="4"
-              onClick={() => navigate("/dashboard/publicaciones")}
+              onClick={() => navigate("/dashboard/items")}
             >
               tabla de Items
             </DropdownItem>
@@ -187,7 +181,7 @@ const Header = () => {
           >
             <DropdownItem
               key="5"
-              onClick={() => navigate("/dashboard/publicaciones")}
+              onClick={() => navigate("/dashboard/reservas")}
             >
               Tabla de reservas
             </DropdownItem>

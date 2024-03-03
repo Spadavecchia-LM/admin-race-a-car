@@ -27,7 +27,12 @@ const AppContext = ({children}) => {
                 return {...state, isLogged: false, admin:null}
                 case "SET_ADMIN":
                 return {...state, admin: action.payload}
-               
+                case "GET_CATEGORIAS":
+                return {...state, categorias: action.payload}
+               case "GET_USUARIOS":
+                return {...state, usuarios: action.payload}
+                case "GET_ITEMS":
+                return {...state, usuarios: action.payload}
         }
 
     }
@@ -47,13 +52,42 @@ const AppContext = ({children}) => {
         }catch(err){
             console.log(err)
         }
+    }
+    const getCategorias = async () => {
+        try{
+            const response = await fetch("http://localhost:8085/categoria/all")
 
+            if(response.ok){
+                const data = await response.json()
+
+                dispatch({type:"GET_CATEGORIAS", payload: data})
+            }
+        }catch(err){
+            console.log(err)
+        }
+    }
+
+
+    const getUsuarios = async () => {
+        try{
+            const response = await fetch("http://localhost:8085/usuarios/all")
+
+            if(response.ok){
+                const data = await response.json()
+
+                dispatch({type:"GET_USUARIOS", payload: data})
+            }
+        }catch(err){
+            console.log(err)
+        }
     }
 
 
     useEffect(() => {
         if(state.isLogged){
             getAutos()
+            getCategorias()
+            getUsuarios()
         }
 
     },[state.isLogged])

@@ -1,4 +1,10 @@
-import { Accordion, AccordionItem, Button, Chip, Image } from "@nextui-org/react";
+import {
+  Accordion,
+  AccordionItem,
+  Button,
+  Chip,
+  Image,
+} from "@nextui-org/react";
 import {
   Table,
   TableHeader,
@@ -28,6 +34,8 @@ import Header from "../Header";
 import { GlobalContext } from "../../Context/AppContext";
 import { useNavigate } from "react-router-dom";
 import { Carousel } from "flowbite-react";
+import PreviewCard from "../utils/PreviewCard";
+import EditarAuto from "../utils/EditarAuto";
 
 const AutosTable = () => {
   const navigate = useNavigate();
@@ -44,23 +52,50 @@ const AutosTable = () => {
     onClose: onImagesModalClose,
   } = useDisclosure();
 
-  const refresh = async() => {
-    try{
-      const response = await fetch("http://localhost:8085/autos/all")
-      if(response.ok){
-        const data = await response.json()
-        dispatch({type:"GET_AUTOS",payload: data})
+  const {
+    isOpen: isPreviewModalOpen,
+    onOpen: onPreviewModalOpen,
+    onClose: onPreviewModalClose,
+  } = useDisclosure();
+
+  const {
+    isOpen: isEditAutoModalOpen,
+    onOpen: onEditAutoModalOpen,
+    onClose: onEditAutoModalClose,
+  } = useDisclosure();
+
+  const refresh = async () => {
+    try {
+      const response = await fetch("http://localhost:8085/autos/all");
+      if (response.ok) {
+        const data = await response.json();
+        dispatch({ type: "GET_AUTOS", payload: data });
       }
-    }catch(err){
-      console.log(err)
+    } catch (err) {
+      console.log(err);
     }
-  }
+  };
+
+  const handleToggleDisponibilidad = async (id) => {
+    try {
+      const response = await fetch(
+        "http://localhost:8085/autos/" + id + "/cambiar-disponibilidad",
+        { method: "PATCH",
+         headers: { "Content-Type": "application/json" }
+         }
+      );
+
+      if (response.ok) {
+        refresh();
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   const { state, dispatch } = useContext(GlobalContext);
 
-  const [ selectedAuto, setSelectedAuto ] = useState(null);
-
-
+  const [selectedAuto, setSelectedAuto] = useState(null);
 
   const { autos } = state;
 
@@ -76,37 +111,48 @@ const AutosTable = () => {
     return autos.slice(start, end);
   }, [page, autos]);
 
-
   const handleSelectedAutoForItems = (id) => {
     const autoEncontrado = autos.find((auto) => auto.id == id);
     setSelectedAuto(autoEncontrado);
-    onItemsModalOpen()
+    onItemsModalOpen();
   };
   const handleSelectedAutoForImages = (id) => {
     const autoEncontrado = autos.find((auto) => auto.id == id);
     setSelectedAuto(autoEncontrado);
-    onImagesModalOpen()
+    onImagesModalOpen();
   };
+  const handleSelectedAutoForPreview = (id) => {
+    const autoEncontrado = autos.find((auto) => auto.id == id);
+    setSelectedAuto(autoEncontrado)
+    onPreviewModalOpen()
+  }
+  const handleSelectedAutoForEditAuto = (id) => {
+    const autoEncontrado = autos.find((auto) => auto.id == id);
+    setSelectedAuto(autoEncontrado)
+    onEditAutoModalOpen()
+  }
 
-  const selectedAutoItems = selectedAuto != null && [...selectedAuto?.items]
+  const selectedAutoItems = selectedAuto != null && [...selectedAuto?.items];
 
   const handleDelete = async (id) => {
-    try{
-      if(confirm("seguro queres eliminar el auto? se perderan todos los datos")){
-        const response = await fetch("http://localhost:8085/autos/" + id, {method:"DELETE"})
-        if(response.ok){
-          alert("borrado con exito")
-          refresh()
+    try {
+      if (
+        confirm("seguro queres eliminar el auto? se perderan todos los datos")
+      ) {
+        const response = await fetch("http://localhost:8085/autos/" + id, {
+          method: "DELETE",
+        });
+        if (response.ok) {
+          alert("borrado con exito");
+          refresh();
         }
-      }else{
-        return
+      } else {
+        return;
       }
-
-      
-    }catch(err){
-      console.log(err)
+    } catch (err) {
+      console.log(err);
     }
-  }
+  };
 
   return (
     <>
@@ -180,7 +226,9 @@ const AutosTable = () => {
             <TableColumn className="bg-primaryGold text-primaryWhite">
               items disponibles
             </TableColumn>
-            <TableColumn className="bg-primaryGold text-primaryWhite" >imagenes</TableColumn>
+            <TableColumn className="bg-primaryGold text-primaryWhite">
+              imagenes
+            </TableColumn>
             <TableColumn className="bg-primaryGold text-primaryWhite">
               traccion
             </TableColumn>
@@ -195,7 +243,7 @@ const AutosTable = () => {
                 <TableCell>{item.marca}</TableCell>
                 <TableCell>{item.modelo}</TableCell>
                 <TableCell>{item.color}</TableCell>
-                <TableCell>{item.categoria}</TableCell>
+                <TableCell>{item.categoria.categoria}</TableCell>
                 <TableCell>{item.anio}</TableCell>
                 <TableCell>{item.capacidad}</TableCell>
                 <TableCell>{item.caballosDeFuerza}</TableCell>
@@ -210,9 +258,15 @@ const AutosTable = () => {
                   <Button
                     className="bg-primaryGold text-primaryWhite"
                     onPress={() => handleSelectedAutoForItems(item.id)}
-                  >ver items</Button>
+                  >
+                    ver items
+                  </Button>
                 </TableCell>
-                <TableCell><Button   onPress={() => handleSelectedAutoForImages(item.id)}>ver fotos</Button></TableCell>
+                <TableCell>
+                  <Button className="text-primaryGold border-primaryGold" variant="bordered"  onPress={() => handleSelectedAutoForImages(item.id)}>
+                    ver fotos
+                  </Button>
+                </TableCell>
                 <TableCell>{item.traccion}</TableCell>
                 <TableCell>
                   <Dropdown>
@@ -225,15 +279,24 @@ const AutosTable = () => {
                         <HiOutlineDotsVertical />
                       </Button>
                     </DropdownTrigger>
+                    
                     <DropdownMenu aria-label="Static Actions">
-                      <DropdownItem key="editar" isDisabled>
+                    <DropdownItem key="previw" onPress={() => handleSelectedAutoForPreview(item.id)}>
+                        previsualizar tarjeta
+                      </DropdownItem>
+                      <DropdownItem key="editar" onPress={() => handleSelectedAutoForEditAuto(item.id)}>
                         editar
                       </DropdownItem>
-                      <DropdownItem key="cambiar estado">
-                        cambiar estado
+                      <DropdownItem
+                        key="cambiar estado"
+                        onClick={() => handleToggleDisponibilidad(item.id)}
+                      >
+                        {item.disponible
+                          ? "cambiar a no disponible"
+                          : "cambiar a disponible"}
                       </DropdownItem>
                       <DropdownItem
-                        onClick={()=>handleDelete(item.id)}
+                        onClick={() => handleDelete(item.id)}
                         key="borrar"
                         className="text-danger"
                         color="danger"
@@ -256,26 +319,31 @@ const AutosTable = () => {
                   Items disponibles
                 </ModalHeader>
                 <ModalBody>
-                  {selectedAuto.items.length == 0 ? 
-                  <h1>no hay items asignados a este vehiculo</h1>  
-                  :
-                  selectedAutoItems.map((item,index) => {
-                    return(
-                      <Accordion key={index}>
-                        
-                        <AccordionItem title={`${item.nombre}`} subtitle={<Chip color={item.incluido ? "success" : "danger"}>{item.incluido ? "incluido" : "no incluido"}</Chip>}>
-                        <ul >
-                          <li>categoria: {item.categoria}</li>
-                          <li>precio: {item.precio}</li>
-                          <li>esta incluido: {item.incluido ? "si" : "no"}</li>
-                      </ul>
-                        </AccordionItem>
-                      </Accordion>
-                   
-                    )
-                  })
-                }
-
+                  {selectedAuto.items.length == 0 ? (
+                    <h1>no hay items asignados a este vehiculo</h1>
+                  ) : (
+                    selectedAutoItems.map((item, index) => {
+                      return (
+                        <Accordion key={index}>
+                          <AccordionItem
+                            title={`${item.nombre}`}
+                            subtitle={
+                              <Chip
+                                color={item.incluido ? "success" : "danger"}
+                              >
+                                {item.incluido ? "incluido" : "no incluido"}
+                              </Chip>
+                            }
+                          >
+                            <ul>
+                              <li>categoria: {item.categoria}</li>
+                              <li>precio: {item.precio}</li>
+                            </ul>
+                          </AccordionItem>
+                        </Accordion>
+                      );
+                    })
+                  )}
                 </ModalBody>
                 <ModalFooter>
                   <Button color="danger" variant="light" onPress={onClose}>
@@ -287,24 +355,79 @@ const AutosTable = () => {
           </ModalContent>
         </Modal>
 
-
-        <Modal size="full" className="bg-secondaryBlue" isOpen={isImagesModalOpen} onOpenChange={onImagesModalClose}>
+        <Modal
+          size="full"
+          className="bg-secondaryBlue"
+          isOpen={isImagesModalOpen}
+          onOpenChange={onImagesModalClose}
+        >
           <ModalContent>
             {(onClose) => (
               <>
                 <ModalBody>
-
-                 <Carousel>
-                  {selectedAuto.images.map(image => {
-                    return(
-                      <img src={image} key={image} alt="foto del auto" className="w-1/2"/>
-                    )
-                  })}
-                 </Carousel>
+                  <Carousel>
+                    {selectedAuto.images.map((image) => {
+                      return (
+                        <img
+                          src={image}
+                          key={image}
+                          alt="foto del auto"
+                          className="w-1/2"
+                        />
+                      );
+                    })}
+                  </Carousel>
                 </ModalBody>
                 <ModalFooter>
                   <Button color="danger" variant="light" onPress={onClose}>
                     Close
+                  </Button>
+                </ModalFooter>
+              </>
+            )}
+          </ModalContent>
+        </Modal>
+
+        <Modal
+          size="lg"
+          className="p-5"
+          isOpen={isPreviewModalOpen}
+          onOpenChange={onPreviewModalClose}
+        >
+          <ModalContent>
+            {(onClose) => (
+              <>
+                <ModalBody>
+                    <PreviewCard publicacion={selectedAuto} />
+                </ModalBody>
+                <ModalFooter>
+                  <Button color="warning" variant="solid" onPress={onClose}>
+                    cerrar
+                  </Button>
+                </ModalFooter>
+              </>
+            )}
+          </ModalContent>
+        </Modal>
+
+        <Modal
+          size="full"
+          scrollBehavior="inside"
+          isOpen={isEditAutoModalOpen}
+          onOpenChange={onEditAutoModalClose}
+        >
+          <ModalContent>
+            {(onClose) => (
+              <>
+              <ModalHeader>
+                editar auto con ID : {selectedAuto.id}
+              </ModalHeader>
+                <ModalBody>
+                   <EditarAuto auto={selectedAuto}/>
+                </ModalBody>
+                <ModalFooter>
+                  <Button color="warning" variant="solid" onPress={onClose}>
+                    cerrar
                   </Button>
                 </ModalFooter>
               </>
