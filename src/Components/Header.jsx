@@ -129,7 +129,7 @@ const Header = () => {
           <NavbarItem>
             <DropdownTrigger>
               <Button
-                
+                isDisabled
                 disableRipple
                 className="p-0 bg-transparent data-[hover=true]:bg-transparent text-primaryWhite"
                 endContent={<IoMdArrowDropdown />}
@@ -161,7 +161,7 @@ const Header = () => {
           <NavbarItem>
             <DropdownTrigger>
               <Button
-                
+                isDisabled
                 disableRipple
                 className="p-0 bg-transparent data-[hover=true]:bg-transparent text-primaryWhite"
                 endContent={<IoMdArrowDropdown />}

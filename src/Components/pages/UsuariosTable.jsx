@@ -15,10 +15,10 @@ const UsuariosTable = () => {
     <div>
       <Header/>
 
-      <div className="flex justify-between items-center text-fsSubtitle text-primaryBlue mb-20 mt-10 w-[98vw] mx-auto">
-          <h3>Tabla de usuarios</h3>
+      <div className="flex justify-between items-center text-fsSubtitle text-primaryBlue mb-20 mt-10 w-[98vw]">
+          <h3 className='ml-4'>Tabla de usuarios</h3>
         </div>
-      <Table aria-label="Example static collection table" className='mt-10 mb-10 w-screen' isStriped>
+      <Table aria-label="Example static collection table" className='mt-10 mb-10 w-screen min-h-screen' isStriped>
       <TableHeader>
         <TableColumn className='bg-primaryGold text-primaryWhite'>ID</TableColumn>
         <TableColumn className='bg-primaryGold text-primaryWhite'>NOMBRE</TableColumn>
