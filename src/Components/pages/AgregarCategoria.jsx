@@ -4,7 +4,7 @@ import { GlobalContext } from '../../Context/AppContext'
 
 const AgregarCategoria = () => {
 
-  const{dispatch} = useContext(GlobalContext)
+  const{state,dispatch} = useContext(GlobalContext)
 
   const [isLoading, setIsLoading] = useState(false)
 
@@ -34,7 +34,7 @@ const AgregarCategoria = () => {
     setIsLoading(true)
 
     try{
-      const response = await fetch("http://localhost:8085/categoria", {method:"POST", body: JSON.stringify(nuevaCategoria), headers:{"Content-Type": "application/json"}})
+      const response = await fetch("http://localhost:8085/categoria", {method:"POST", body: JSON.stringify(nuevaCategoria), headers:{"Content-Type": "application/json", "rol": state.admin.rolUsuario.id}})
 
       if(response.ok){
         alert("agregado con exito!")

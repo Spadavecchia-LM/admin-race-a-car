@@ -26,7 +26,7 @@ const AgregarAuto = () => {
 
     const refresh = async() => {
         try{
-          const response = await fetch("http://localhost:8085/autos/all")
+          const response = await fetch("http://localhost:8085/autos/all", {headers:{"rol": state.admin.rolUsuario.id}})
           if(response.ok){
             const data = await response.json()
             dispatch({type:"GET_AUTOS",payload: data})
@@ -92,7 +92,8 @@ const AgregarAuto = () => {
               const postAutoPromise = fetch("http://localhost:8085/autos", {
                 method:"POST",
                 headers:{
-                  "Content-Type": "application/json"
+                  "Content-Type": "application/json",
+                  "rol": state.admin.rolUsuario.id
                 },
                 body: JSON.stringify({...nuevoAuto, images: urls})
               });
@@ -139,31 +140,31 @@ const AgregarAuto = () => {
 
         <div className='flex items-center justify-around gap-5'>
             <span className='w-1/2 bg-primaryGold text-primaryWhite rounded-md text-center py-[14px]'>marca</span>
-            <Input className='w-1/2' name='marca' label="marca"  variant='flat' size='md' onChange={handleInputChange} ></Input>
+            <Input className='w-1/2' name='marca'   variant='flat' size='md' onChange={handleInputChange} ></Input>
         </div>
         <div className='flex items-center justify-around gap-5 '>
             <span className='w-1/2 bg-primaryGold text-primaryWhite rounded-md text-center py-[14px]'>modelo</span>
-            <Input className='w-1/2' name='modelo' label="modelo"  variant='flat' size='md' onChange={handleInputChange}  ></Input>
+            <Input className='w-1/2' name='modelo'   variant='flat' size='md' onChange={handleInputChange}  ></Input>
         </div>
         <div className='flex items-center justify-around gap-5 '>
             <span className='w-1/2 bg-primaryGold text-primaryWhite rounded-md text-center py-[14px]'>color</span>
-            <Input className='w-1/2' name='color' label="color"  variant='flat' size='md'  onChange={handleInputChange} ></Input>
+            <Input className='w-1/2' name='color'  variant='flat' size='md'  onChange={handleInputChange} ></Input>
         </div>
         <div className='flex items-center justify-around gap-5 '>
             <span className='w-1/2 bg-primaryGold text-primaryWhite rounded-md text-center py-[14px]'>año</span>
-            <Input className='w-1/2' name='anio' label="año" type='number' variant='flat' size='md' onChange={handleInputChange} ></Input>
+            <Input className='w-1/2' name='anio'  type='number' variant='flat' size='md' onChange={handleInputChange} ></Input>
         </div>
         <div className='flex items-center justify-around gap-5 '>
             <span className='w-1/2 bg-primaryGold text-primaryWhite rounded-md text-center py-[14px]'>capacidad</span>
-            <Input className='w-1/2' name='capacidad' label="capacidad" type='number'  variant='flat' size='md' onChange={handleInputChange} ></Input>
+            <Input className='w-1/2' name='capacidad'  type='number'  variant='flat' size='md' onChange={handleInputChange} ></Input>
         </div>
         <div className='flex items-center justify-around gap-5 '>
             <span className='w-1/2 bg-primaryGold text-primaryWhite rounded-md text-center py-[14px]'>caballos de fuerza</span>
-            <Input className='w-1/2' name='caballosDeFuerza' label="caballos de fuerza" type='number'  variant='flat' size='md' onChange={handleInputChange} ></Input>
+            <Input className='w-1/2' name='caballosDeFuerza'  type='number'  variant='flat' size='md' onChange={handleInputChange} ></Input>
         </div>
         <div className='flex items-center justify-around gap-5 '>
             <span className='w-1/2 bg-primaryGold text-primaryWhite rounded-md text-center py-[14px]'>categoria</span>
-            <Select className='w-1/2' name='idCategoria' label="categoria"  variant='flat' size='md'  onChange={handleInputChange}>
+            <Select className='w-1/2' name='idCategoria'  variant='flat' size='md'  onChange={handleInputChange}>
                 {categorias?.map((categoria) => {
                     return(
                         <SelectItem key={categoria.id} value={categoria.id}>{categoria.categoria}</SelectItem>
@@ -173,14 +174,14 @@ const AgregarAuto = () => {
         </div>
         <div className='flex items-center justify-around gap-5 '>
             <span className='w-1/2 bg-primaryGold text-primaryWhite rounded-md text-center py-[14px]'>tipo de caja</span>
-            <Select className='w-1/2' name='tipoDeCaja' label="caja"  variant='flat' size='md' onChange={handleInputChange} >
+            <Select className='w-1/2' name='tipoDeCaja'   variant='flat' size='md' onChange={handleInputChange} >
                 <SelectItem key={"Automática"} value={"Automática"} >Automatica</SelectItem>
                 <SelectItem key={"Manual"} value={"Manual"} >Manual</SelectItem>
             </Select>
         </div>
         <div className='flex items-center justify-around gap-5 '>
             <span className='w-1/2 bg-primaryGold text-primaryWhite rounded-md text-center py-[14px]'>combustion</span>
-            <Select className='w-1/2' name='combustion' label="combustion"  variant='flat' size='md' onChange={handleInputChange} >
+            <Select className='w-1/2' name='combustion'   variant='flat' size='md' onChange={handleInputChange} >
                 <SelectItem key={"Naftero"} value={"Naftero"} >Naftero</SelectItem>
                 <SelectItem key={"Hibrido"} value={"Hibrido"} >Hibrido</SelectItem>
                 <SelectItem key={"Electrico"} value={"Electrico"}>Electrico</SelectItem>
@@ -188,7 +189,7 @@ const AgregarAuto = () => {
         </div>
         <div className='flex items-center justify-around gap-5 '>
             <span className='w-1/2 bg-primaryGold text-primaryWhite rounded-md text-center py-[14px]'>traccion</span>
-            <Select className='w-1/2' name='traccion' label="traccion"  variant='flat' size='md' onChange={handleInputChange} >
+            <Select className='w-1/2' name='traccion'  variant='flat' size='md' onChange={handleInputChange} >
                 <SelectItem key={"Delantera"} value={"Delantera"} >Delantera</SelectItem>
                 <SelectItem key={"Trasera"} value={"Trasera"} >Trasera</SelectItem>
                 <SelectItem key={"Integral"} value={"Integral"}>Integral</SelectItem>
@@ -196,7 +197,7 @@ const AgregarAuto = () => {
         </div>
         <div className='flex items-center justify-around gap-5 '>
             <span className='w-1/2 bg-primaryGold text-primaryWhite rounded-md text-center py-[14px]'>valor</span>
-            <Input className='w-1/2' name='valor' label="valor" type='number' variant='flat' size='md' onChange={handleInputChange} ></Input>
+            <Input className='w-1/2' name='valor'  type='number' variant='flat' size='md' onChange={handleInputChange} ></Input>
         </div>
         <div className='flex items-center justify-around gap-5 '>
             <span className='w-1/2 bg-primaryGold text-primaryWhite rounded-md text-center py-[14px]'>imagenes</span>

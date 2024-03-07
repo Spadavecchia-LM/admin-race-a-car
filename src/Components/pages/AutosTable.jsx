@@ -40,6 +40,8 @@ import EditarAuto from "../utils/EditarAuto";
 const AutosTable = () => {
   const navigate = useNavigate();
 
+  const { state, dispatch } = useContext(GlobalContext);
+
   const {
     isOpen: isItemsModalOpen,
     onOpen: onItemsModalOpen,
@@ -66,7 +68,7 @@ const AutosTable = () => {
 
   const refresh = async () => {
     try {
-      const response = await fetch("http://localhost:8085/autos/all");
+      const response = await fetch("http://localhost:8085/autos/all", {headers:{"rol": state.admin.rolUsuario.id}});
       if (response.ok) {
         const data = await response.json();
         dispatch({ type: "GET_AUTOS", payload: data });
@@ -77,11 +79,17 @@ const AutosTable = () => {
   };
 
   const handleToggleDisponibilidad = async (id) => {
+
+    const rol = {
+      id: state.admin.rolUsuario.id
+    }
+
     try {
       const response = await fetch(
         "http://localhost:8085/autos/" + id + "/cambiar-disponibilidad",
         { method: "PATCH",
-         headers: { "Content-Type": "application/json" }
+         headers: { "Content-Type": "application/json" },
+         body:JSON.stringify(rol)
          }
       );
 
@@ -93,7 +101,7 @@ const AutosTable = () => {
     }
   };
 
-  const { state, dispatch } = useContext(GlobalContext);
+ 
 
   const [selectedAuto, setSelectedAuto] = useState(null);
 
@@ -135,12 +143,20 @@ const AutosTable = () => {
   const selectedAutoItems = selectedAuto != null && [...selectedAuto?.items];
 
   const handleDelete = async (id) => {
+
+    const rol = {
+      id: state.admin.rolUsuario.id
+    }
+
     try {
       if (
         confirm("seguro queres eliminar el auto? se perderan todos los datos")
       ) {
         const response = await fetch("http://localhost:8085/autos/" + id, {
           method: "DELETE",
+          headers:{
+            "rol": rol.id
+          }
         });
         if (response.ok) {
           alert("borrado con exito");
@@ -346,8 +362,8 @@ const AutosTable = () => {
                   )}
                 </ModalBody>
                 <ModalFooter>
-                  <Button color="danger" variant="light" onPress={onClose}>
-                    Close
+                  <Button color="warning" variant="light" onPress={onClose}>
+                    cerrar
                   </Button>
                 </ModalFooter>
               </>
@@ -379,8 +395,8 @@ const AutosTable = () => {
                   </Carousel>
                 </ModalBody>
                 <ModalFooter>
-                  <Button color="danger" variant="light" onPress={onClose}>
-                    Close
+                  <Button color="warning" variant="light" onPress={onClose}>
+                    cerrar
                   </Button>
                 </ModalFooter>
               </>
@@ -390,7 +406,7 @@ const AutosTable = () => {
 
         <Modal
           size="lg"
-          className="p-5"
+          className="p-5 bg-secondaryBlue"
           isOpen={isPreviewModalOpen}
           onOpenChange={onPreviewModalClose}
         >

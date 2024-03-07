@@ -41,8 +41,15 @@ const AppContext = ({children}) => {
 
     const getAutos = async () => {
 
+   
+
         try{
-            const response = await fetch("http://localhost:8085/autos/all")
+            const response = await fetch("http://localhost:8085/autos/all", 
+            {
+                headers: {
+                    "rol": state.admin.rolUsuario.id
+                }
+            })
 
             if(response.ok){
                 const data = await response.json()
@@ -69,8 +76,15 @@ const AppContext = ({children}) => {
 
 
     const getUsuarios = async () => {
+        const idRol = {
+            id: state.admin.rolUsuario.id
+        }
         try{
-            const response = await fetch("http://localhost:8085/usuarios/all")
+            const response = await fetch("http://localhost:8085/usuarios/all",  {
+                headers: {
+                    "rol": state.admin.rolUsuario.id
+                }
+            })
 
             if(response.ok){
                 const data = await response.json()

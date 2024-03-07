@@ -10,6 +10,7 @@ import { useContext, useEffect, useState } from "react"
 import Error from "./Components/pages/Error"
 import { GlobalContext } from "./Context/AppContext"
 import UsuariosTable from "./Components/pages/UsuariosTable"
+import NotLogged from "./Components/pages/NotLogged"
 
 function App() {
 
@@ -34,12 +35,12 @@ function App() {
   <>
   
   <Routes>
-  <Route path="/dashboard" element={<Home/>}/>
+  <Route path="/dashboard" element={isLogged ? <Home/> : <NotLogged/>}/>
   <Route path="/" element={ <Login/>}/>
-  <Route path="/dashboard/autos" element={<AutosTable/>}/>
-  <Route path="/dashboard/agregar/auto" element={<AgregarAuto/>}/>
-  <Route path="/dashboard/categorias" element={<CategoriasTable/>}/>
-  <Route path="/dashboard/usuarios" element={<UsuariosTable/>}/>
+  <Route path="/dashboard/autos" element={isLogged ? <AutosTable/> : <NotLogged/>}/>
+  <Route path="/dashboard/agregar/auto" element={isLogged ? <AgregarAuto/> : <NotLogged/>}/>
+  <Route path="/dashboard/categorias" element={isLogged ? <CategoriasTable/> : <NotLogged/>}/>
+  <Route path="/dashboard/usuarios" element={isLogged  ? <UsuariosTable/> : <NotLogged/>}/>
 
   <Route/>
   <Route/>

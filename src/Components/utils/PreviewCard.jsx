@@ -8,6 +8,7 @@ import { BiCategory } from "react-icons/bi";
 import { useNavigate } from "react-router-dom";
 import { GlobalContext } from "../../Context/AppContext";
 import { Carousel } from "flowbite-react";
+import { BsFuelPumpFill } from "react-icons/bs";
 
 const PreviewCard = ({ publicacion }) => {
   const { state } = useContext(GlobalContext);
@@ -51,10 +52,10 @@ const PreviewCard = ({ publicacion }) => {
             <GiGearStickPattern /> {publicacion.tipoDeCaja}
           </span>
           <span className="flex flex-col items-center text-[12px]">
-            <GoPeople /> {publicacion.capacidad} personas
+            <GoPeople /> {publicacion.capacidad}
           </span>
           <span className="flex flex-col items-center text-[12px]">
-            <BiCategory /> {publicacion.categoria.categoria}{" "}
+            <BsFuelPumpFill/> {publicacion.combustion}
           </span>
         </div>
         <div className="w-full flex justify-center">

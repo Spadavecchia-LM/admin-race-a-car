@@ -32,9 +32,13 @@ const Login = () => {
             const settings = {
               method: "POST",
               headers:{
-                "Content-type": "application/json"
+                "Content-type": "application/json",
+                
+                
               },
-              body: JSON.stringify(admin)
+              body: JSON.stringify(admin),
+            
+              
             }
 
             const response = await fetch("http://localhost:8085/auth/login", settings)
@@ -45,10 +49,10 @@ const Login = () => {
               const adminResponse = await fetch(`http://localhost:8085/usuarios/${admin.username}`, {headers:{Authorization: `Bearer: ${token}`}})
                       if(adminResponse.ok){
                         const data = await adminResponse.json()
-                          console.log(data)
+                        
                         const {rolUsuario} = data
 
-                        if(rolUsuario.rol === "ADMIN"){
+                        if(rolUsuario.rol === "ADMIN" || rolUsuario.rol === "SUPER_ADMIN"){
                           localStorage.setItem("Authorization", token)
                           dispatch({type:"LOGIN"})
                           dispatch({type:"SET_ADMIN", payload: data})
