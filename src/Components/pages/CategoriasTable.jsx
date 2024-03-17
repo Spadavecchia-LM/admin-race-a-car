@@ -34,7 +34,7 @@ const CategoriasTable = () => {
           method:"DELETE",
           headers: {
             "Context-Type": "application/json",
-            "rol": state.admin.rolUsuario.id
+            "idRol": state.admin.rolUsuario.id
           }
         }
       )

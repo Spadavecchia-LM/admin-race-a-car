@@ -26,7 +26,7 @@ const AgregarAuto = () => {
 
     const refresh = async() => {
         try{
-          const response = await fetch("http://localhost:8085/autos/all", {headers:{"rol": state.admin.rolUsuario.id}})
+          const response = await fetch("http://localhost:8085/autos/all", {headers:{"idRol": state.admin.rolUsuario.id}})
           if(response.ok){
             const data = await response.json()
             dispatch({type:"GET_AUTOS",payload: data})
@@ -93,7 +93,7 @@ const AgregarAuto = () => {
                 method:"POST",
                 headers:{
                   "Content-Type": "application/json",
-                  "rol": state.admin.rolUsuario.id
+                  "idRol": state.admin.rolUsuario.id
                 },
                 body: JSON.stringify({...nuevoAuto, images: urls})
               });
@@ -118,12 +118,14 @@ const AgregarAuto = () => {
                 disponible:true,
                 images: []
               });
-              setIsLoading(false);
+              
               document.querySelector("#form").reset();
               refresh();
             }
           } catch (error) {
             console.error('Error:', error);
+          }finally{
+            setIsLoading(false);
           }
     }
 

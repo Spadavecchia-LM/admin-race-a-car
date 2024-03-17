@@ -68,10 +68,10 @@ const AutosTable = () => {
 
   const refresh = async () => {
     try {
-      const response = await fetch("http://localhost:8085/autos/all", {headers:{"rol": state.admin.rolUsuario.id}});
+      const response = await fetch("http://localhost:8085/autos/all", {headers:{"idRol": state.admin.rolUsuario.id}});
       if (response.ok) {
         const data = await response.json();
-        dispatch({ type: "GET_AUTOS", payload: data });
+        dispatch({ type: "GET_AUTOS", payload: data.sort((a,b) => a.id - b.id ) });
       }
     } catch (err) {
       console.log(err);
@@ -80,16 +80,14 @@ const AutosTable = () => {
 
   const handleToggleDisponibilidad = async (id) => {
 
-    const rol = {
-      id: state.admin.rolUsuario.id
-    }
+
 
     try {
       const response = await fetch(
         "http://localhost:8085/autos/" + id + "/cambiar-disponibilidad",
         { method: "PATCH",
-         headers: { "Content-Type": "application/json" },
-         body:JSON.stringify(rol)
+         headers: { "Content-Type": "application/json", "idRol": state.admin.rolUsuario.id },
+        
          }
       );
 
@@ -155,7 +153,7 @@ const AutosTable = () => {
         const response = await fetch("http://localhost:8085/autos/" + id, {
           method: "DELETE",
           headers:{
-            "rol": rol.id
+            "idRol": rol.id
           }
         });
         if (response.ok) {

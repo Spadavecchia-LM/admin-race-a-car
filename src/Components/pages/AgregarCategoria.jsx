@@ -34,7 +34,7 @@ const AgregarCategoria = () => {
     setIsLoading(true)
 
     try{
-      const response = await fetch("http://localhost:8085/categoria", {method:"POST", body: JSON.stringify(nuevaCategoria), headers:{"Content-Type": "application/json", "rol": state.admin.rolUsuario.id}})
+      const response = await fetch("http://localhost:8085/categoria", {method:"POST", body: JSON.stringify(nuevaCategoria), headers:{"Content-Type": "application/json", "idRol": state.admin.rolUsuario.id}})
 
       if(response.ok){
         alert("agregado con exito!")

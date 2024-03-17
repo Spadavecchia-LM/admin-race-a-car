@@ -19,10 +19,7 @@ import { HiDotsVertical } from "react-icons/hi";
 const UsuariosTable = () => {
   const { state, dispatch } = useContext(GlobalContext);
 
-  const adminId = {
-    id: state.admin.rolUsuario.id,
-  };
-  console.log(adminId);
+
 
   const { usuarios } = state;
 
@@ -30,7 +27,7 @@ const UsuariosTable = () => {
     try {
       const response = await fetch("http://localhost:8085/usuarios/all",   {
         headers: {
-            "rol": state.admin.rolUsuario.id
+            "idRol": state.admin.rolUsuario.id
         }
     });
       if (response.ok) {
@@ -50,6 +47,7 @@ const UsuariosTable = () => {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
+            "idRol": state.admin.rolUsuario.id
           },
           body: JSON.stringify(adminId),
         }
@@ -73,8 +71,10 @@ const UsuariosTable = () => {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
+            "idRol": state.admin.rolUsuario.id
+
           },
-          body: JSON.stringify(adminId),
+        
         }
       );
 
