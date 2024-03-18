@@ -238,7 +238,7 @@ const AutosTable = () => {
               tipo de caja
             </TableColumn>
             <TableColumn className="bg-primaryGold text-primaryWhite">
-              items disponibles
+              items incluidos
             </TableColumn>
             <TableColumn className="bg-primaryGold text-primaryWhite">
               imagenes
@@ -330,7 +330,7 @@ const AutosTable = () => {
             {(onClose) => (
               <>
                 <ModalHeader className="flex flex-col gap-1">
-                  Items disponibles
+                  Items Incluidos
                 </ModalHeader>
                 <ModalBody>
                   {selectedAuto.items.length == 0 ? (
@@ -343,16 +343,13 @@ const AutosTable = () => {
                             title={`${item.nombre}`}
                             subtitle={
                               <Chip
-                                color={item.incluido ? "success" : "danger"}
+                                color="success"
                               >
-                                {item.incluido ? "incluido" : "no incluido"}
+                                incluido
                               </Chip>
                             }
                           >
-                            <ul>
-                              <li>categoria: {item.categoria}</li>
-                              <li>precio: {item.precio}</li>
-                            </ul>
+                      
                           </AccordionItem>
                         </Accordion>
                       );

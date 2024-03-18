@@ -22,11 +22,11 @@ const EditarAuto = ({ auto }) => {
   const refresh = async () => {
     try {
       const response = await fetch("http://localhost:8085/autos/all", {
-        headers: { rol: state.admin.rolUsuario.id },
+        headers: {"idRol": state.admin.rolUsuario.id, },
       });
       if (response.ok) {
         const data = await response.json();
-        dispatch({ type: "GET_AUTOS", payload: data });
+        dispatch({ type: "GET_AUTOS", payload: data.sort((a,b) => a.id - b.id ) });
       }
     } catch (err) {
       console.log(err);
@@ -68,7 +68,7 @@ const EditarAuto = ({ auto }) => {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
-          rol: state.admin.rolUsuario.id,
+          "idRol": state.admin.rolUsuario.id,
         },
         body: JSON.stringify(nuevoAuto),
       });

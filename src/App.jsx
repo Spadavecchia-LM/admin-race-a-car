@@ -5,12 +5,14 @@ import Login from "./Components/pages/Login"
 import AutosTable from "./Components/pages/AutosTable"
 import CategoriasTable from "./Components/pages/CategoriasTable"
 import AgregarAuto from "./Components/pages/AgregarAuto"
-import AgregarCategoria from "./Components/pages/AgregarCategoria"
 import { useContext, useEffect, useState } from "react"
 import Error from "./Components/pages/Error"
 import { GlobalContext } from "./Context/AppContext"
 import UsuariosTable from "./Components/pages/UsuariosTable"
 import NotLogged from "./Components/pages/NotLogged"
+import ItemsTable from "./Components/pages/itemsTable"
+
+
 
 function App() {
 
@@ -41,6 +43,7 @@ function App() {
   <Route path="/dashboard/agregar/auto" element={isLogged ? <AgregarAuto/> : <NotLogged/>}/>
   <Route path="/dashboard/categorias" element={isLogged ? <CategoriasTable/> : <NotLogged/>}/>
   <Route path="/dashboard/usuarios" element={isLogged  ? <UsuariosTable/> : <NotLogged/>}/>
+  <Route path="/dashboard/items" element={isLogged  ? <ItemsTable/>: <NotLogged/>}/>
 
   <Route/>
   <Route/>

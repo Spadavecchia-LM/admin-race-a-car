@@ -129,6 +129,38 @@ const Header = () => {
           <NavbarItem>
             <DropdownTrigger>
               <Button
+                
+                disableRipple
+                className="p-0 bg-transparent data-[hover=true]:bg-transparent text-primaryWhite"
+                endContent={<IoMdArrowDropdown />}
+                radius="sm"
+                variant="light"
+              >
+                Items incluidos
+              </Button>
+            </DropdownTrigger>
+          </NavbarItem>
+          <DropdownMenu
+            aria-label="ACME features"
+            className="w-[340px]"
+            itemClasses={{
+              base: "gap-4",
+            }}
+          >
+            <DropdownItem
+              key="4"
+              onClick={() => navigate("/dashboard/items")}
+            >
+              tabla de Items
+            </DropdownItem>
+        
+          </DropdownMenu>
+        </Dropdown>
+
+        <Dropdown>
+          <NavbarItem>
+            <DropdownTrigger>
+              <Button
                 isDisabled
                 disableRipple
                 className="p-0 bg-transparent data-[hover=true]:bg-transparent text-primaryWhite"
@@ -136,7 +168,7 @@ const Header = () => {
                 radius="sm"
                 variant="light"
               >
-                Items
+                Items adicionales
               </Button>
             </DropdownTrigger>
           </NavbarItem>
