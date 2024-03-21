@@ -4,6 +4,7 @@ import {
   Button,
   Chip,
   Image,
+  Input,
 } from "@nextui-org/react";
 import {
   Table,
@@ -41,6 +42,16 @@ const AutosTable = () => {
   const navigate = useNavigate();
 
   const { state, dispatch } = useContext(GlobalContext);
+  const { autos } = state;
+
+  const [autosFilter, setAutosFilter] = useState("")
+  const [autosFiltrados, setAutosFiltrados] = useState(autos)
+
+  useEffect(() => {
+    const autosFiltrados = autos.filter(a => a.marca.toLowerCase().includes(autosFilter.toLowerCase()))
+
+    setAutosFiltrados(autosFiltrados)
+  },[autosFilter])
 
   const {
     isOpen: isItemsModalOpen,
@@ -99,23 +110,25 @@ const AutosTable = () => {
     }
   };
 
- 
+  
 
   const [selectedAuto, setSelectedAuto] = useState(null);
 
-  const { autos } = state;
+
 
   const [page, setPage] = React.useState(1);
   const rowsPerPage = 5;
 
-  const pages = Math.ceil(autos.length / rowsPerPage);
+  const pages = Math.ceil(autosFiltrados.length / rowsPerPage);
 
   const items = React.useMemo(() => {
     const start = (page - 1) * rowsPerPage;
     const end = start + rowsPerPage;
 
-    return autos.slice(start, end);
-  }, [page, autos]);
+    return autosFiltrados.slice(start, end);
+  }, [page, autosFiltrados]);
+
+
 
   const handleSelectedAutoForItems = (id) => {
     const autoEncontrado = autos.find((auto) => auto.id == id);
@@ -171,6 +184,8 @@ const AutosTable = () => {
   return (
     <>
       <Header />
+
+      
       <div className="w-[95vw] mx-auto min-h-screen ">
         <div className="flex justify-between items-center text-fsSubtitle text-primaryBlue mb-20 mt-10">
           <h3>Tabla de vehículos</h3>
@@ -183,7 +198,7 @@ const AutosTable = () => {
             Agregar nuevo vehículo
           </Button>
         </div>
-
+        <Input type="search" value={autosFilter} onValueChange={setAutosFilter} className="w-1/4 my-5" placeholder="buscar por marca"/>
         <Table
           isStriped
           removeWrapper
@@ -250,7 +265,7 @@ const AutosTable = () => {
               Acciones
             </TableColumn>
           </TableHeader>
-          <TableBody items={items}>
+          <TableBody emptyContent={`no se encontraron autos con ${autosFilter}`} items={items}>
             {(item) => (
               <TableRow key={item.id}>
                 <TableCell>{item.id}</TableCell>

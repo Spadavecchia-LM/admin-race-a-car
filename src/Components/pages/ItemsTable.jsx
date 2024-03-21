@@ -49,7 +49,7 @@ getItems()
           <h3>Tabla de items incluidos</h3>
      
         </div>
-      <Table aria-label="Example static collection table" className='mt-10 mb-10 w-1/2 mx-auto' isStriped>
+      <Table aria-label="Example static collection table" className='mt-10 mb-10 w-1/2 h-[80vh] mx-auto' isStriped>
       <TableHeader>
         <TableColumn className='bg-primaryGold text-primaryWhite'>ID</TableColumn>
         <TableColumn className='bg-primaryGold text-primaryWhite'>NOMBRE</TableColumn>

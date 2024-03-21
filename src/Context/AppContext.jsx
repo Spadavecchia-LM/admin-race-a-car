@@ -67,7 +67,7 @@ const AppContext = ({children}) => {
             if(response.ok){
                 const data = await response.json()
 
-                dispatch({type:"GET_CATEGORIAS", payload: data})
+                dispatch({type:"GET_CATEGORIAS", payload: data.sort((a,b) => a.id - b.id )})
             }
         }catch(err){
             console.log(err)
@@ -87,7 +87,7 @@ const AppContext = ({children}) => {
             if(response.ok){
                 const data = await response.json()
 
-                dispatch({type:"GET_USUARIOS", payload: data})
+                dispatch({type:"GET_USUARIOS", payload: data.sort((a,b) => a.id - b.id )})
             }
         }catch(err){
             console.log(err)

@@ -4,6 +4,7 @@ import {Button, Input, Select, SelectItem, Spinner} from "@nextui-org/react";
 
 import { GlobalContext } from '../../Context/AppContext';
 import { uploadFiles } from '../../firebase/config';
+import { useNavigate } from 'react-router-dom';
 
 const AgregarAuto = () => {
 
@@ -69,6 +70,7 @@ const AgregarAuto = () => {
     const handleFilesOnChange = (e) => {
         setImagenes([...imagenes, ...e.target.files])
     }
+    const navigate = useNavigate()
  
 
 
@@ -121,6 +123,7 @@ const AgregarAuto = () => {
               
               document.querySelector("#form").reset();
               refresh();
+              navigate("/dashboard/autos")
             }
           } catch (error) {
             console.error('Error:', error);
@@ -166,7 +169,7 @@ const AgregarAuto = () => {
         </div>
         <div className='flex items-center justify-around gap-5 '>
             <span className='w-1/2 bg-primaryGold text-primaryWhite rounded-md text-center py-[14px]'>categoria</span>
-            <Select className='w-1/2' name='idCategoria'  variant='flat' size='md'  onChange={handleInputChange}>
+            <Select className='w-1/2' name='idCategoria'  variant='flat' size='md' aria-label='categorias'  onChange={handleInputChange}>
                 {categorias?.map((categoria) => {
                     return(
                         <SelectItem key={categoria.id} value={categoria.id}>{categoria.categoria}</SelectItem>
@@ -176,14 +179,14 @@ const AgregarAuto = () => {
         </div>
         <div className='flex items-center justify-around gap-5 '>
             <span className='w-1/2 bg-primaryGold text-primaryWhite rounded-md text-center py-[14px]'>tipo de caja</span>
-            <Select className='w-1/2' name='tipoDeCaja'   variant='flat' size='md' onChange={handleInputChange} >
+            <Select className='w-1/2' name='tipoDeCaja'   variant='flat' size='md' aria-label='transmision' onChange={handleInputChange} >
                 <SelectItem key={"Automática"} value={"Automática"} >Automatica</SelectItem>
                 <SelectItem key={"Manual"} value={"Manual"} >Manual</SelectItem>
             </Select>
         </div>
         <div className='flex items-center justify-around gap-5 '>
             <span className='w-1/2 bg-primaryGold text-primaryWhite rounded-md text-center py-[14px]'>combustion</span>
-            <Select className='w-1/2' name='combustion'   variant='flat' size='md' onChange={handleInputChange} >
+            <Select className='w-1/2' name='combustion' aria-label='combustion'   variant='flat' size='md' onChange={handleInputChange} >
                 <SelectItem key={"Naftero"} value={"Naftero"} >Naftero</SelectItem>
                 <SelectItem key={"Hibrido"} value={"Hibrido"} >Hibrido</SelectItem>
                 <SelectItem key={"Electrico"} value={"Electrico"}>Electrico</SelectItem>
@@ -191,7 +194,7 @@ const AgregarAuto = () => {
         </div>
         <div className='flex items-center justify-around gap-5 '>
             <span className='w-1/2 bg-primaryGold text-primaryWhite rounded-md text-center py-[14px]'>traccion</span>
-            <Select className='w-1/2' name='traccion'  variant='flat' size='md' onChange={handleInputChange} >
+            <Select className='w-1/2' name='traccion'  variant='flat' aria-label='traccion' size='md' onChange={handleInputChange} >
                 <SelectItem key={"Delantera"} value={"Delantera"} >Delantera</SelectItem>
                 <SelectItem key={"Trasera"} value={"Trasera"} >Trasera</SelectItem>
                 <SelectItem key={"Integral"} value={"Integral"}>Integral</SelectItem>

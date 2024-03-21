@@ -17,6 +17,8 @@ const EditarAuto = ({ auto }) => {
     getCategorias();
   }, []);
 
+  
+
   const { state, dispatch } = useContext(GlobalContext);
 
   const refresh = async () => {
