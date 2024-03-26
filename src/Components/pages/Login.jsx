@@ -41,12 +41,12 @@ const Login = () => {
               
             }
 
-            const response = await fetch("http://localhost:8085/auth/login", settings)
+            const response = await fetch("http://44.204.2.67:8085/auth/login", settings)
 
 
             if(response.ok){
               const {token} = await response.json()
-              const adminResponse = await fetch(`http://localhost:8085/usuarios/${admin.username}`, {headers:{Authorization: `Bearer: ${token}`}})
+              const adminResponse = await fetch(`http://44.204.2.67:8085/usuarios/${admin.username}`, {headers:{Authorization: `Bearer: ${token}`}})
                       if(adminResponse.ok){
                         const data = await adminResponse.json()
                         

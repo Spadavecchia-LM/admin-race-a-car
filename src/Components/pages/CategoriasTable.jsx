@@ -50,11 +50,11 @@ const CategoriasTable = () => {
 
   const refresh = async () => {
     try {
-      const response = await fetch("http://localhost:8085/categoria/all");
+      const response = await fetch("http://44.204.2.67:8085/categoria/all");
       if (response.ok) {
         const data = await response.json();
         dispatch({ type: "GET_CATEGORIAS", payload: data });
-        const autosResponse = await fetch("http://localhost:8085/autos/all")
+        const autosResponse = await fetch("http://44.204.2.67:8085/autos/all")
         if(autosResponse.ok){
           const data = await autosResponse.json()
           dispatch({ type: "GET_AUTOS", payload: data.sort((a,b) => a.id - b.id ) });
@@ -72,7 +72,7 @@ const CategoriasTable = () => {
 
   const handleDelete = async (id) => {
     try{
-        const response = await fetch("http://localhost:8085/categoria/" + id,
+        const response = await fetch("http://44.204.2.67:8085/categoria/" + id,
         {
           method:"DELETE",
           headers: {

@@ -44,14 +44,16 @@ const AutosTable = () => {
   const { state, dispatch } = useContext(GlobalContext);
   const { autos } = state;
 
-  const [autosFilter, setAutosFilter] = useState("")
-  const [autosFiltrados, setAutosFiltrados] = useState(autos)
+  const [autosFilter, setAutosFilter] = useState("");
+  const [autosFiltrados, setAutosFiltrados] = useState(autos);
 
   useEffect(() => {
-    const autosFiltrados = autos.filter(a => a.marca.toLowerCase().includes(autosFilter.toLowerCase()))
+    const autosFiltrados = autos.filter((a) =>
+      a.marca.toLowerCase().includes(autosFilter.toLowerCase())
+    );
 
-    setAutosFiltrados(autosFiltrados)
-  },[autosFilter])
+    setAutosFiltrados(autosFiltrados);
+  }, [autosFilter]);
 
   const {
     isOpen: isItemsModalOpen,
@@ -79,10 +81,15 @@ const AutosTable = () => {
 
   const refresh = async () => {
     try {
-      const response = await fetch("http://localhost:8085/autos/all", {headers:{"idRol": state.admin.rolUsuario.id}});
+      const response = await fetch("http://44.204.2.67:8085/autos/all", {
+        headers: { idRol: state.admin.rolUsuario.id },
+      });
       if (response.ok) {
         const data = await response.json();
-        dispatch({ type: "GET_AUTOS", payload: data.sort((a,b) => a.id - b.id ) });
+        dispatch({
+          type: "GET_AUTOS",
+          payload: data.sort((a, b) => a.id - b.id),
+        });
       }
     } catch (err) {
       console.log(err);
@@ -90,16 +97,16 @@ const AutosTable = () => {
   };
 
   const handleToggleDisponibilidad = async (id) => {
-
-
-
     try {
       const response = await fetch(
-        "http://localhost:8085/autos/" + id + "/cambiar-disponibilidad",
-        { method: "PATCH",
-         headers: { "Content-Type": "application/json", "idRol": state.admin.rolUsuario.id },
-        
-         }
+        "http://44.204.2.67:8085/autos/" + id + "/cambiar-disponibilidad",
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            idRol: state.admin.rolUsuario.id,
+          },
+        }
       );
 
       if (response.ok) {
@@ -110,11 +117,7 @@ const AutosTable = () => {
     }
   };
 
-  
-
   const [selectedAuto, setSelectedAuto] = useState(null);
-
-
 
   const [page, setPage] = React.useState(1);
   const rowsPerPage = 5;
@@ -128,8 +131,6 @@ const AutosTable = () => {
     return autosFiltrados.slice(start, end);
   }, [page, autosFiltrados]);
 
-
-
   const handleSelectedAutoForItems = (id) => {
     const autoEncontrado = autos.find((auto) => auto.id == id);
     setSelectedAuto(autoEncontrado);
@@ -142,32 +143,31 @@ const AutosTable = () => {
   };
   const handleSelectedAutoForPreview = (id) => {
     const autoEncontrado = autos.find((auto) => auto.id == id);
-    setSelectedAuto(autoEncontrado)
-    onPreviewModalOpen()
-  }
+    setSelectedAuto(autoEncontrado);
+    onPreviewModalOpen();
+  };
   const handleSelectedAutoForEditAuto = (id) => {
     const autoEncontrado = autos.find((auto) => auto.id == id);
-    setSelectedAuto(autoEncontrado)
-    onEditAutoModalOpen()
-  }
+    setSelectedAuto(autoEncontrado);
+    onEditAutoModalOpen();
+  };
 
   const selectedAutoItems = selectedAuto != null && [...selectedAuto?.items];
 
   const handleDelete = async (id) => {
-
     const rol = {
-      id: state.admin.rolUsuario.id
-    }
+      id: state.admin.rolUsuario.id,
+    };
 
     try {
       if (
         confirm("seguro queres eliminar el auto? se perderan todos los datos")
       ) {
-        const response = await fetch("http://localhost:8085/autos/" + id, {
+        const response = await fetch("http://44.204.2.67:8085/autos/" + id, {
           method: "DELETE",
-          headers:{
-            "idRol": rol.id
-          }
+          headers: {
+            idRol: rol.id,
+          },
         });
         if (response.ok) {
           alert("borrado con exito");
@@ -185,7 +185,6 @@ const AutosTable = () => {
     <>
       <Header />
 
-      
       <div className="w-[95vw] mx-auto min-h-screen ">
         <div className="flex justify-between items-center text-fsSubtitle text-primaryBlue mb-20 mt-10">
           <h3>Tabla de vehículos</h3>
@@ -198,7 +197,13 @@ const AutosTable = () => {
             Agregar nuevo vehículo
           </Button>
         </div>
-        <Input type="search" value={autosFilter} onValueChange={setAutosFilter} className="w-1/4 my-5" placeholder="buscar por marca"/>
+        <Input
+          type="search"
+          value={autosFilter}
+          onValueChange={setAutosFilter}
+          className="w-1/4 my-5"
+          placeholder="buscar por marca"
+        />
         <Table
           isStriped
           removeWrapper
@@ -265,7 +270,10 @@ const AutosTable = () => {
               Acciones
             </TableColumn>
           </TableHeader>
-          <TableBody emptyContent={`no se encontraron autos con ${autosFilter}`} items={items}>
+          <TableBody
+            emptyContent={`no se encontraron autos con ${autosFilter}`}
+            items={items}
+          >
             {(item) => (
               <TableRow key={item.id}>
                 <TableCell>{item.id}</TableCell>
@@ -292,7 +300,11 @@ const AutosTable = () => {
                   </Button>
                 </TableCell>
                 <TableCell>
-                  <Button className="text-primaryGold border-primaryGold" variant="bordered"  onPress={() => handleSelectedAutoForImages(item.id)}>
+                  <Button
+                    className="text-primaryGold border-primaryGold"
+                    variant="bordered"
+                    onPress={() => handleSelectedAutoForImages(item.id)}
+                  >
                     ver fotos
                   </Button>
                 </TableCell>
@@ -308,12 +320,18 @@ const AutosTable = () => {
                         <HiOutlineDotsVertical />
                       </Button>
                     </DropdownTrigger>
-                    
+
                     <DropdownMenu aria-label="Static Actions">
-                    <DropdownItem key="previw" onPress={() => handleSelectedAutoForPreview(item.id)}>
+                      <DropdownItem
+                        key="previw"
+                        onPress={() => handleSelectedAutoForPreview(item.id)}
+                      >
                         previsualizar tarjeta
                       </DropdownItem>
-                      <DropdownItem key="editar" onPress={() => handleSelectedAutoForEditAuto(item.id)}>
+                      <DropdownItem
+                        key="editar"
+                        onPress={() => handleSelectedAutoForEditAuto(item.id)}
+                      >
                         editar
                       </DropdownItem>
                       <DropdownItem
@@ -356,16 +374,8 @@ const AutosTable = () => {
                         <Accordion key={index}>
                           <AccordionItem
                             title={`${item.nombre}`}
-                            subtitle={
-                              <Chip
-                                color="success"
-                              >
-                                incluido
-                              </Chip>
-                            }
-                          >
-                      
-                          </AccordionItem>
+                            subtitle={<Chip color="success">incluido</Chip>}
+                          ></AccordionItem>
                         </Accordion>
                       );
                     })
@@ -424,7 +434,7 @@ const AutosTable = () => {
             {(onClose) => (
               <>
                 <ModalBody>
-                    <PreviewCard publicacion={selectedAuto} />
+                  <PreviewCard publicacion={selectedAuto} />
                 </ModalBody>
                 <ModalFooter>
                   <Button color="warning" variant="solid" onPress={onClose}>
@@ -445,11 +455,11 @@ const AutosTable = () => {
           <ModalContent>
             {(onClose) => (
               <>
-              <ModalHeader>
-                editar auto con ID : {selectedAuto.id}
-              </ModalHeader>
+                <ModalHeader>
+                  editar auto con ID : {selectedAuto.id}
+                </ModalHeader>
                 <ModalBody>
-                   <EditarAuto auto={selectedAuto}/>
+                  <EditarAuto auto={selectedAuto} />
                 </ModalBody>
                 <ModalFooter>
                   <Button color="warning" variant="solid" onPress={onClose}>

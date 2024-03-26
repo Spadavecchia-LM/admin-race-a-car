@@ -12,7 +12,7 @@ const AgregarAuto = () => {
 
     useEffect(() => {
         const getCategorias = async () => {
-            const response = await fetch("http://localhost:8085/categoria/all")
+            const response = await fetch("http://44.204.2.67:8085/categoria/all")
 
             if(response.ok){
                 const data = await response.json()
@@ -27,7 +27,7 @@ const AgregarAuto = () => {
 
     const refresh = async() => {
         try{
-          const response = await fetch("http://localhost:8085/autos/all", {headers:{"idRol": state.admin.rolUsuario.id}})
+          const response = await fetch("http://44.204.2.67:8085/autos/all", {headers:{"idRol": state.admin.rolUsuario.id}})
           if(response.ok){
             const data = await response.json()
             dispatch({type:"GET_AUTOS",payload: data})
@@ -91,7 +91,7 @@ const AgregarAuto = () => {
           
        
           
-              const postAutoPromise = fetch("http://localhost:8085/autos", {
+              const postAutoPromise = fetch("http://44.204.2.67:8085/autos", {
                 method:"POST",
                 headers:{
                   "Content-Type": "application/json",

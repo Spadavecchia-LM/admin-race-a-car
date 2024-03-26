@@ -25,7 +25,7 @@ const UsuariosTable = () => {
 
   const refresh = async () => {
     try {
-      const response = await fetch("http://localhost:8085/usuarios/all",   {
+      const response = await fetch("http://44.204.2.67:8085/usuarios/all",   {
         headers: {
             "idRol": state.admin.rolUsuario.id
         }
@@ -42,7 +42,7 @@ const UsuariosTable = () => {
   const setToUser = async (id) => {
     try {
       const response = await fetch(
-        "http://localhost:8085/admin/" + id + "/rol/user",
+        "http://44.204.2.67:8085/admin/" + id + "/rol/user",
         {
           method: "PUT",
           headers: {
@@ -66,7 +66,7 @@ const UsuariosTable = () => {
   const setToAdmin = async(id) => {
     try {
       const response = await fetch(
-        "http://localhost:8085/admin/" + id + "/rol/admin",
+        "http://44.204.2.67:8085/admin/" + id + "/rol/admin",
         {
           method: "PUT",
           headers: {
