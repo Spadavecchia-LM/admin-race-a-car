@@ -10,8 +10,7 @@ import Error from "./Components/pages/Error"
 import { GlobalContext } from "./Context/AppContext"
 import UsuariosTable from "./Components/pages/UsuariosTable"
 import NotLogged from "./Components/pages/NotLogged"
-import ItemsTable from "./Components/pages/itemsTable"
-
+import ItemsTable from "./Components/pages/ItemsTable"
 
 
 function App() {

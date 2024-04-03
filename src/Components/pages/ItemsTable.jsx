@@ -4,8 +4,7 @@ import Header from '../Header'
 import {  Table,  TableHeader,  TableBody,  TableColumn,  TableRow,  TableCell, Dropdown,DropdownItem, DropdownTrigger, Button, DropdownMenu} from "@nextui-org/react";
 import { GlobalContext } from '../../Context/AppContext';
 import { HiDotsVertical } from 'react-icons/hi';
-import {  Modal,   ModalContent,   ModalHeader,   ModalBody,   ModalFooter, useDisclosure} from "@nextui-org/react";
-
+import {  Modal,   ModalContent, ModalFooter, useDisclosure} from "@nextui-org/react";
 import EditarItemIncluido from '../utils/EditarItemIncluido';
 const ItemsTable = () => {
 
