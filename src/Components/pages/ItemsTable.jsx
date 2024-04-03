@@ -19,7 +19,7 @@ const ItemsTable = () => {
 
         const getItems = async() => {
             try{
-                const response = await fetch("http://44.204.2.67:8085/items/todos")
+                const response = await fetch(import.meta.env.VITE_BACKENDURL + "/items/todos")
 
                 if(response.ok){
                     const data = await response.json()
