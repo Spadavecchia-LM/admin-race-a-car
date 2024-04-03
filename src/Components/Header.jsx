@@ -13,14 +13,14 @@ const Header = () => {
   const logout = () => {
     localStorage.removeItem("Authorization")
     dispatch({type:"LOGOUT"})
-    navigate("/")
+    navigate("/admin")
   }
 
   return (
     <Navbar className="bg-primaryBlue text-primaryWhite">
       <NavbarBrand>
       
-        <p className="font-bold text-inherit cursor-pointer" onClick={() => navigate("/dashboard")}>RACE-A-CAR</p>
+        <p className="font-bold text-inherit cursor-pointer" onClick={() => navigate("/admin/dashboard")}>RACE-A-CAR</p>
       </NavbarBrand>
       <NavbarContent className="hidden sm:flex gap-4" justify="center">
         <Dropdown>
@@ -46,13 +46,13 @@ const Header = () => {
           >
             <DropdownItem
               key="agregarAuto"
-              onClick={() => navigate("/dashboard/agregar/auto")}
+              onClick={() => navigate("/admin/dashboard/agregar/auto")}
             >
               Agregar nuevo vehículo
             </DropdownItem>
             <DropdownItem
               key="autos"
-              onClick={() => navigate("/dashboard/autos")}
+              onClick={() => navigate("/admin/dashboard/autos")}
             >
               Tabla de vehículos
             </DropdownItem>
@@ -85,7 +85,7 @@ const Header = () => {
           >
             <DropdownItem
               key="2"
-              onClick={() => navigate("/dashboard/categorias")}
+              onClick={() => navigate("/admin/dashboard/categorias")}
             >
               Tabla de categorias
             </DropdownItem>
@@ -117,7 +117,7 @@ const Header = () => {
           >
             <DropdownItem
               key="3"
-              onClick={() => navigate("/dashboard/usuarios")}
+              onClick={() => navigate("/admin/dashboard/usuarios")}
             >
               Tabla de Usuarios
             </DropdownItem>
@@ -149,7 +149,7 @@ const Header = () => {
           >
             <DropdownItem
               key="4"
-              onClick={() => navigate("/dashboard/items")}
+              onClick={() => navigate("/admin/dashboard/items")}
             >
               tabla de Items
             </DropdownItem>
@@ -181,7 +181,7 @@ const Header = () => {
           >
             <DropdownItem
               key="4"
-              onClick={() => navigate("/dashboard/items")}
+              onClick={() => navigate("/admin/dashboard/items")}
             >
               tabla de Items
             </DropdownItem>
@@ -213,7 +213,7 @@ const Header = () => {
           >
             <DropdownItem
               key="5"
-              onClick={() => navigate("/dashboard/reservas")}
+              onClick={() => navigate("/admin/dashboard/reservas")}
             >
               Tabla de reservas
             </DropdownItem>

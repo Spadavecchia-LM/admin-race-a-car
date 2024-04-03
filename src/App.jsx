@@ -37,13 +37,13 @@ function App() {
   <>
   
   <Routes>
-  <Route path="/dashboard" element={isLogged ? <Home/> : <NotLogged/>}/>
-  <Route path="/" element={ <Login/>}/>
-  <Route path="/dashboard/autos" element={isLogged ? <AutosTable/> : <NotLogged/>}/>
-  <Route path="/dashboard/agregar/auto" element={isLogged ? <AgregarAuto/> : <NotLogged/>}/>
-  <Route path="/dashboard/categorias" element={isLogged ? <CategoriasTable/> : <NotLogged/>}/>
-  <Route path="/dashboard/usuarios" element={isLogged  ? <UsuariosTable/> : <NotLogged/>}/>
-  <Route path="/dashboard/items" element={isLogged  ? <ItemsTable/>: <NotLogged/>}/>
+  <Route path="/admin/dashboard" element={isLogged ? <Home/> : <NotLogged/>}/>
+  <Route path="/admin/" element={ <Login/>}/>
+  <Route path="/admin/dashboard/autos" element={isLogged ? <AutosTable/> : <NotLogged/>}/>
+  <Route path="/admin/dashboard/agregar/auto" element={isLogged ? <AgregarAuto/> : <NotLogged/>}/>
+  <Route path="/admin/dashboard/categorias" element={isLogged ? <CategoriasTable/> : <NotLogged/>}/>
+  <Route path="/admin/dashboard/usuarios" element={isLogged  ? <UsuariosTable/> : <NotLogged/>}/>
+  <Route path="/admin/dashboard/items" element={isLogged  ? <ItemsTable/>: <NotLogged/>}/>
 
   <Route/>
   <Route/>

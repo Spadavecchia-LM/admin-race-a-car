@@ -123,7 +123,7 @@ const AgregarAuto = () => {
               
               document.querySelector("#form").reset();
               refresh();
-              navigate("/dashboard/autos")
+              navigate("/admin/dashboard/autos")
             }
           } catch (error) {
             console.error('Error:', error);
