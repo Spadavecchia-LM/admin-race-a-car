@@ -81,7 +81,7 @@ const AutosTable = () => {
 
   const refresh = async () => {
     try {
-      const response = await fetch("http://44.204.2.67:8085/autos/all", {
+      const response = await fetch(import.meta.env.VITE_BACKENDURL + "/autos/all", {
         headers: { idRol: state.admin.rolUsuario.id },
       });
       if (response.ok) {
@@ -99,7 +99,7 @@ const AutosTable = () => {
   const handleToggleDisponibilidad = async (id) => {
     try {
       const response = await fetch(
-        "http://44.204.2.67:8085/autos/" + id + "/cambiar-disponibilidad",
+        import.meta.env.VITE_BACKENDURL + "/autos/" + id + "/cambiar-disponibilidad",
         {
           method: "PATCH",
           headers: {
@@ -163,7 +163,7 @@ const AutosTable = () => {
       if (
         confirm("seguro queres eliminar el auto? se perderan todos los datos")
       ) {
-        const response = await fetch("http://44.204.2.67:8085/autos/" + id, {
+        const response = await fetch(import.meta.env.VITE_BACKENDURL + "/autos/" + id, {
           method: "DELETE",
           headers: {
             idRol: rol.id,

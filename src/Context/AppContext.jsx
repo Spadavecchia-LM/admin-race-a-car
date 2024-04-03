@@ -44,7 +44,7 @@ const AppContext = ({children}) => {
    
 
         try{
-            const response = await fetch("http://44.204.2.67:8085/autos/all", 
+            const response = await fetch(import.meta.env.VITE_BACKENDURL + "/autos/all", 
             {
                 headers: {
                     "idRol": state.admin.rolUsuario.id
@@ -62,7 +62,7 @@ const AppContext = ({children}) => {
     }
     const getCategorias = async () => {
         try{
-            const response = await fetch("http://44.204.2.67:8085/categoria/all")
+            const response = await fetch(import.meta.env.VITE_BACKENDURL + "/categoria/all")
 
             if(response.ok){
                 const data = await response.json()
@@ -78,7 +78,7 @@ const AppContext = ({children}) => {
     const getUsuarios = async () => {
    
         try{
-            const response = await fetch("http://44.204.2.67:8085/usuarios/all",  {
+            const response = await fetch(import.meta.env.VITE_BACKENDURL + "/usuarios/all",  {
                 headers: {
                     "idRol": state.admin.rolUsuario.id
                 }

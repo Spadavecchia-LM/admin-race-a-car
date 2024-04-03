@@ -41,7 +41,7 @@ const Login = () => {
               
             }
 
-            const response = await fetch("http://44.204.2.67:8085/auth/login", settings)
+            const response = await fetch(import.meta.env.VITE_BACKENDURL + "/auth/login", settings)
 
 
             if(response.ok){
