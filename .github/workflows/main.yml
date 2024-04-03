@@ -1,0 +1,38 @@
+name: Deploy to EC2 and Restart Nginx
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Build project
+        run: npm install && npm run build
+
+      - name: Copy dist to EC2
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.EC2_PRIVATE_KEY }}
+          passphrase: renta
+          source: "dist/*"
+          target: "/var/www/html/admin"
+
+      - name: SSH into EC2 and restart Nginx
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.EC2_PRIVATE_KEY }}
+          passphrase: renta
+          port: ${{ secrets.EC2_SSH_PORT }}
+          script: |
+            sudo systemctl restart nginx.service
