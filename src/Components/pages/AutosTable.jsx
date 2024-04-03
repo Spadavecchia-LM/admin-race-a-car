@@ -192,7 +192,7 @@ const AutosTable = () => {
             variant="solid"
             className="bg-primaryGold text-primaryWhite"
             size="lg"
-            onClick={() => navigate("/admin/dashboard/agregar/auto")}
+            onClick={() => navigate("/dashboard/agregar/auto")}
           >
             Agregar nuevo vehículo
           </Button>

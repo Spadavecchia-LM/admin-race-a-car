@@ -62,7 +62,7 @@ const Login = () => {
                             timer:3000
                             
                           })
-                          navigate("/admin/dashboard")
+                          navigate("/dashboard")
                         }else{
                           alert("no cuentas con permisos para acceder")
                         }
