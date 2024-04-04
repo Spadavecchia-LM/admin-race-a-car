@@ -11,6 +11,7 @@ import { GlobalContext } from "./Context/AppContext"
 import UsuariosTable from "./Components/pages/UsuariosTable"
 import NotLogged from "./Components/pages/NotLogged"
 import ItemsTable from "./Components/pages/ItemsTable"
+import ReservasTable from "./Components/pages/ReservasTable"
 
 
 function App() {
@@ -43,6 +44,7 @@ function App() {
   <Route path="/dashboard/categorias" element={isLogged ? <CategoriasTable/> : <NotLogged/>}/>
   <Route path="/dashboard/usuarios" element={isLogged  ? <UsuariosTable/> : <NotLogged/>}/>
   <Route path="/dashboard/items" element={isLogged  ? <ItemsTable/>: <NotLogged/>}/>
+  <Route path="/dashboard/reservas" element={isLogged  ? <ReservasTable/> : <NotLogged/>}/>
 
   <Route/>
   <Route/>

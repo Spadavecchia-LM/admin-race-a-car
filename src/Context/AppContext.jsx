@@ -9,12 +9,10 @@ const AppContext = ({children}) => {
     const initialState = {
         isLogged:false,
         admin:null,
-      
         autos:[],
         categorias:[],
         usuarios:[],
         items:[],
-        reservas:[]
     }
 
     const reducer = (state, action) => {
