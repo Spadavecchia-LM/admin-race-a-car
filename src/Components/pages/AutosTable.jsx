@@ -28,24 +28,48 @@ import {
   ModalBody,
   ModalFooter,
   useDisclosure,
+  Spinner
 } from "@nextui-org/react";
 import { HiOutlineDotsVertical } from "react-icons/hi";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import Header from "../Header";
 import { GlobalContext } from "../../Context/AppContext";
 import { useNavigate } from "react-router-dom";
 import { Carousel } from "flowbite-react";
 import PreviewCard from "../utils/PreviewCard";
 import EditarAuto from "../utils/EditarAuto";
+import Swal from "sweetalert2"
 
 const AutosTable = () => {
   const navigate = useNavigate();
 
   const { state, dispatch } = useContext(GlobalContext);
   const { autos } = state;
+  const [isLoading, setIsLoading] = useState(false)
 
   const [autosFilter, setAutosFilter] = useState("");
   const [autosFiltrados, setAutosFiltrados] = useState(autos);
+
+
+  const refresh = async () => {
+    setIsLoading(true)
+    try {
+      const response = await fetch(import.meta.env.VITE_BACKENDURL + "/autos/all",   {
+        headers: {
+            "idRol": state.admin.rolUsuario.id
+        }
+    });
+      if (response.ok) {
+        const data = await response.json();
+        dispatch({ type: "GET_AUTOS", payload: data });
+      }
+    } catch (err) {
+      console.log(err);
+    }finally{
+      setIsLoading(false)
+    }
+  };
+
 
   useEffect(() => {
     const autosFiltrados = autos.filter((a) =>
@@ -55,11 +79,8 @@ const AutosTable = () => {
     setAutosFiltrados(autosFiltrados);
   }, [autosFilter]);
 
-  const {
-    isOpen: isItemsModalOpen,
-    onOpen: onItemsModalOpen,
-    onClose: onItemsModalClose,
-  } = useDisclosure();
+
+
 
   const {
     isOpen: isImagesModalOpen,
@@ -79,22 +100,9 @@ const AutosTable = () => {
     onClose: onEditAutoModalClose,
   } = useDisclosure();
 
-  const refresh = async () => {
-    try {
-      const response = await fetch(import.meta.env.VITE_BACKENDURL + "/autos/all", {
-        headers: { idRol: state.admin.rolUsuario.id },
-      });
-      if (response.ok) {
-        const data = await response.json();
-        dispatch({
-          type: "GET_AUTOS",
-          payload: data.sort((a, b) => a.id - b.id),
-        });
-      }
-    } catch (err) {
-      console.log(err);
-    }
-  };
+
+
+ 
 
   const handleToggleDisponibilidad = async (id) => {
     try {
@@ -110,7 +118,13 @@ const AutosTable = () => {
       );
 
       if (response.ok) {
-        refresh();
+        Swal.fire({
+          toast:true,
+          timer:1000,
+          title:"cambiado con exito",
+          position:"bottom",
+          icon:"success"
+        })
       }
     } catch (err) {
       console.log(err);
@@ -127,15 +141,9 @@ const AutosTable = () => {
   const items = React.useMemo(() => {
     const start = (page - 1) * rowsPerPage;
     const end = start + rowsPerPage;
-
     return autosFiltrados.slice(start, end);
-  }, [page, autosFiltrados]);
+  }, [page, autosFiltrados, autos]);
 
-  const handleSelectedAutoForItems = (id) => {
-    const autoEncontrado = autos.find((auto) => auto.id == id);
-    setSelectedAuto(autoEncontrado);
-    onItemsModalOpen();
-  };
   const handleSelectedAutoForImages = (id) => {
     const autoEncontrado = autos.find((auto) => auto.id == id);
     setSelectedAuto(autoEncontrado);
@@ -152,7 +160,7 @@ const AutosTable = () => {
     onEditAutoModalOpen();
   };
 
-  const selectedAutoItems = selectedAuto != null && [...selectedAuto?.items];
+
 
   const handleDelete = async (id) => {
     const rol = {
@@ -171,7 +179,7 @@ const AutosTable = () => {
         });
         if (response.ok) {
           alert("borrado con exito");
-          refresh();
+          
         }
       } else {
         return;
@@ -186,7 +194,9 @@ const AutosTable = () => {
       <Header />
 
       <div className="w-[95vw] mx-auto min-h-screen ">
-        <div className="flex justify-between items-center text-fsSubtitle text-primaryBlue mb-20 mt-10">
+        {autosFiltrados.length > 0 ? 
+        <>
+          <div className="flex justify-between items-center text-fsSubtitle text-primaryBlue mb-20 mt-10">
           <h3>Tabla de vehículos</h3>
           <Button
             variant="solid"
@@ -197,13 +207,18 @@ const AutosTable = () => {
             Agregar nuevo vehículo
           </Button>
         </div>
-        <Input
+          <div className="flex justify-between items-center">
+          <Input
           type="search"
           value={autosFilter}
           onValueChange={setAutosFilter}
           className="w-1/4 my-5"
           placeholder="buscar por marca"
         />
+
+        <Button color="warning" onClick={() => refresh()}>{isLoading ? <Spinner/> : "refrescar"}</Button>
+          </div>
+  
         <Table
           isStriped
           removeWrapper
@@ -234,6 +249,9 @@ const AutosTable = () => {
               modelo
             </TableColumn>
             <TableColumn className="bg-primaryGold text-primaryWhite">
+              Promedio valoraciones
+            </TableColumn>
+            <TableColumn className="bg-primaryGold text-primaryWhite">
               color
             </TableColumn>
             <TableColumn className="bg-primaryGold text-primaryWhite">
@@ -258,9 +276,6 @@ const AutosTable = () => {
               tipo de caja
             </TableColumn>
             <TableColumn className="bg-primaryGold text-primaryWhite">
-              items incluidos
-            </TableColumn>
-            <TableColumn className="bg-primaryGold text-primaryWhite">
               imagenes
             </TableColumn>
             <TableColumn className="bg-primaryGold text-primaryWhite">
@@ -270,127 +285,90 @@ const AutosTable = () => {
               Acciones
             </TableColumn>
           </TableHeader>
-          <TableBody
-            emptyContent={`no se encontraron autos con ${autosFilter}`}
-            items={items}
-          >
-            {(item) => (
-              <TableRow key={item.id}>
-                <TableCell>{item.id}</TableCell>
-                <TableCell>{item.marca}</TableCell>
-                <TableCell>{item.modelo}</TableCell>
-                <TableCell>{item.color}</TableCell>
-                <TableCell>{item.categoria.categoria}</TableCell>
-                <TableCell>{item.anio}</TableCell>
-                <TableCell>{item.capacidad}</TableCell>
-                <TableCell>{item.caballosDeFuerza}</TableCell>
-                <TableCell>
-                  <Chip color={item.disponible ? "primary" : "danger"}>
-                    {item.disponible ? "si" : "no"}
-                  </Chip>
-                </TableCell>
-                <TableCell>{item.valor}</TableCell>
-                <TableCell>{item.tipoDeCaja}</TableCell>
-                <TableCell>
-                  <Button
-                    className="bg-primaryGold text-primaryWhite"
-                    onPress={() => handleSelectedAutoForItems(item.id)}
-                  >
-                    ver items
-                  </Button>
-                </TableCell>
-                <TableCell>
-                  <Button
-                    className="text-primaryGold border-primaryGold"
-                    variant="bordered"
-                    onPress={() => handleSelectedAutoForImages(item.id)}
-                  >
-                    ver fotos
-                  </Button>
-                </TableCell>
-                <TableCell>{item.traccion}</TableCell>
-                <TableCell>
-                  <Dropdown>
-                    <DropdownTrigger>
+          <TableBody items={items}>
+             { (item) =>
+              (
+                  <TableRow key={item.id}>
+                    <TableCell>{item.id}</TableCell>
+                    <TableCell>{item.marca}</TableCell>
+                    <TableCell>{item.modelo}</TableCell>
+                    <TableCell>{item.promedio == null ? "sin valoraciones" : `${item.promedio} ⭐`}</TableCell>
+                    <TableCell>{item.color}</TableCell>
+                    <TableCell>{item.categoria.categoria}</TableCell>
+                    <TableCell>{item.anio}</TableCell>
+                    <TableCell>{item.capacidad}</TableCell>
+                    <TableCell>{item.caballosDeFuerza}</TableCell>
+                    <TableCell>
+                      <Chip color={item.disponible ? "primary" : "danger"}>
+                        {item.disponible ? "si" : "no"}
+                      </Chip>
+                    </TableCell>
+                    <TableCell>{item.valor}</TableCell>
+                    <TableCell>{item.tipoDeCaja}</TableCell>
+                    <TableCell>
                       <Button
+                        className="text-primaryGold border-primaryGold"
                         variant="bordered"
-                        size="sm"
-                        className="border-primaryGold"
+                        onPress={() => handleSelectedAutoForImages(item.id)}
                       >
-                        <HiOutlineDotsVertical />
+                        ver fotos
                       </Button>
-                    </DropdownTrigger>
-
-                    <DropdownMenu aria-label="Static Actions">
-                      <DropdownItem
-                        key="previw"
-                        onPress={() => handleSelectedAutoForPreview(item.id)}
-                      >
-                        previsualizar tarjeta
-                      </DropdownItem>
-                      <DropdownItem
-                        key="editar"
-                        onPress={() => handleSelectedAutoForEditAuto(item.id)}
-                      >
-                        editar
-                      </DropdownItem>
-                      <DropdownItem
-                        key="cambiar estado"
-                        onClick={() => handleToggleDisponibilidad(item.id)}
-                      >
-                        {item.disponible
-                          ? "cambiar a no disponible"
-                          : "cambiar a disponible"}
-                      </DropdownItem>
-                      <DropdownItem
-                        onClick={() => handleDelete(item.id)}
-                        key="borrar"
-                        className="text-danger"
-                        color="danger"
-                      >
-                        borrar
-                      </DropdownItem>
-                    </DropdownMenu>
-                  </Dropdown>
-                </TableCell>
-              </TableRow>
-            )}
+                    </TableCell>
+                    <TableCell>{item.traccion}</TableCell>
+                    <TableCell>
+                      <Dropdown>
+                        <DropdownTrigger>
+                          <Button
+                            variant="bordered"
+                            size="sm"
+                            className="border-primaryGold"
+                          >
+                            <HiOutlineDotsVertical />
+                          </Button>
+                        </DropdownTrigger>
+    
+                        <DropdownMenu aria-label="Static Actions">
+                          <DropdownItem
+                            key="previw"
+                            onPress={() => handleSelectedAutoForPreview(item.id)}
+                          >
+                            previsualizar tarjeta
+                          </DropdownItem>
+                          <DropdownItem
+                            key="editar"
+                            onPress={() => handleSelectedAutoForEditAuto(item.id)}
+                          >
+                            editar
+                          </DropdownItem>
+                          <DropdownItem
+                            key="cambiar estado"
+                            onClick={() => handleToggleDisponibilidad(item.id)}
+                          >
+                            {item.disponible
+                              ? "cambiar a no disponible"
+                              : "cambiar a disponible"}
+                          </DropdownItem>
+                          <DropdownItem
+                            onClick={() => handleDelete(item.id)}
+                            key="borrar"
+                            className="text-danger"
+                            color="danger"
+                          >
+                            borrar
+                          </DropdownItem>
+                        </DropdownMenu>
+                      </Dropdown>
+                    </TableCell>
+                  </TableRow>
+              )
+            }
           </TableBody>
         </Table>
-
-        <Modal isOpen={isItemsModalOpen} onOpenChange={onItemsModalClose}>
-          <ModalContent>
-            {(onClose) => (
-              <>
-                <ModalHeader className="flex flex-col gap-1">
-                  Items Incluidos
-                </ModalHeader>
-                <ModalBody>
-                  {selectedAuto.items.length == 0 ? (
-                    <h1>no hay items asignados a este vehiculo</h1>
-                  ) : (
-                    selectedAutoItems.map((item, index) => {
-                      return (
-                        <Accordion key={index}>
-                          <AccordionItem
-                            title={`${item.nombre}`}
-                            subtitle={<Chip color="success">incluido</Chip>}
-                          ></AccordionItem>
-                        </Accordion>
-                      );
-                    })
-                  )}
-                </ModalBody>
-                <ModalFooter>
-                  <Button color="warning" variant="light" onPress={onClose}>
-                    cerrar
-                  </Button>
-                </ModalFooter>
-              </>
-            )}
-          </ModalContent>
-        </Modal>
-
+        </>
+        :
+        <Spinner/>
+      }
+       
         <Modal
           size="full"
           className="bg-secondaryBlue"
@@ -402,7 +380,7 @@ const AutosTable = () => {
               <>
                 <ModalBody>
                   <Carousel>
-                    {selectedAuto.images.map((image) => {
+                    {selectedAuto?.images.map((image) => {
                       return (
                         <img
                           src={image}

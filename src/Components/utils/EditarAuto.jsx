@@ -7,7 +7,7 @@ const EditarAuto = ({ auto }) => {
 
   useEffect(() => {
     const getCategorias = async () => {
-      const response = await fetch("http://localhost:8085/categoria/all");
+      const response = await fetch(import.meta.env.VITE_BACKENDURL + "/categoria/all");
 
       if (response.ok) {
         const data = await response.json();
@@ -21,19 +21,6 @@ const EditarAuto = ({ auto }) => {
 
   const { state, dispatch } = useContext(GlobalContext);
 
-  const refresh = async () => {
-    try {
-      const response = await fetch("http://localhost:8085/autos/all", {
-        headers: {"idRol": state.admin.rolUsuario.id, },
-      });
-      if (response.ok) {
-        const data = await response.json();
-        dispatch({ type: "GET_AUTOS", payload: data.sort((a,b) => a.id - b.id ) });
-      }
-    } catch (err) {
-      console.log(err);
-    }
-  };
 
   const [categorias, setCategorias] = useState([]);
 
@@ -53,7 +40,6 @@ const EditarAuto = ({ auto }) => {
     disponible: true,
   });
 
-  const [imagenes, setImagenes] = useState([]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -66,7 +52,7 @@ const EditarAuto = ({ auto }) => {
     setIsLoading(true);
 
     try {
-      const postAutoPromise = fetch("http://localhost:8085/autos/" + auto.id, {
+      const postAutoPromise = fetch(import.meta.env.VITE_BACKENDURL +  "/autos/" + auto.id, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -96,7 +82,6 @@ const EditarAuto = ({ auto }) => {
         });
 
         document.querySelector("#form").reset();
-        refresh();
       } else {
         alert("ocurrio un error al querer editar el auto");
       }
